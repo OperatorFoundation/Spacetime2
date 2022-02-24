@@ -1,6 +1,20 @@
-public struct Spacetime {
-    public private(set) var text = "Hello, World!"
+//
+//  Spacetime.swift
+//  
+//
+//  Created by Dr. Brandon Wiley on 2/3/22.
+//
 
-    public init() {
+import Foundation
+
+public class Spacetime
+{
+    public init()
+    {
+    }
+
+    public func display(_ string: String)
+    {
+        
     }
 }
