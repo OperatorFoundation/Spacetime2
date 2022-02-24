@@ -10,7 +10,7 @@ import SwiftQueue
 import Spacetime
 import Chord
 
-public class Universe<State> where State: Stateful
+open class Universe<State> where State: Stateful
 {
     var state: State
     let effects: BlockingQueue<Effect>
