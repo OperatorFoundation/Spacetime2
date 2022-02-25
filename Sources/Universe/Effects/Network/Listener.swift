@@ -5,16 +5,17 @@
 //  Created by Dr. Brandon Wiley on 2/4/22.
 //
 
+import Chord
 import Foundation
 import Spacetime
-import Chord
+import TransmissionTypes
 
-public class Listener<T> where T: Stateful
+public class Listener: TransmissionTypes.Listener
 {
-    public let universe: Universe<T>
+    public let universe: Universe
     public let uuid: UUID
 
-    public convenience init(universe: Universe<T>, address: String, port: Int) throws
+    public convenience init(universe: Universe, address: String, port: Int) throws
     {
         let request = ListenRequest(address, port)
         universe.effects.enqueue(element: request)
@@ -65,13 +66,13 @@ public class Listener<T> where T: Stateful
         }
     }
 
-    public init(universe: Universe<T>, uuid: UUID)
+    public init(universe: Universe, uuid: UUID)
     {
         self.universe = universe
         self.uuid = uuid
     }
 
-    public func accept() -> Connection<T>
+    public func accept() -> TransmissionTypes.Connection
     {
         let request = AcceptRequest(self.uuid)
         universe.effects.enqueue(element: request)
@@ -110,7 +111,7 @@ public class Listener<T> where T: Stateful
 
 extension Universe
 {
-    public func listen(_ address: String, _ port: Int) throws -> Listener<State>
+    public func listen(_ address: String, _ port: Int) throws -> Listener
     {
         return try Listener(universe: self, address: address, port: port)
     }

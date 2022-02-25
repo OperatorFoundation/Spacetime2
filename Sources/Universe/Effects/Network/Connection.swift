@@ -11,12 +11,12 @@ import Foundation
 import Spacetime
 import TransmissionTypes
 
-public class Connection<T>: TransmissionTypes.Connection  where T: Stateful
+public class Connection: TransmissionTypes.Connection
 {
-    public let universe: Universe<T>
+    public let universe: Universe
     public let uuid: UUID
 
-    public convenience init?(universe: Universe<T>, address: String, port: Int)
+    public convenience init?(universe: Universe, address: String, port: Int)
     {
         let request = ConnectRequest(address, port)
         universe.effects.enqueue(element: request)
@@ -67,7 +67,7 @@ public class Connection<T>: TransmissionTypes.Connection  where T: Stateful
         }
     }
 
-    public init(universe: Universe<T>, _ uuid: UUID)
+    public init(universe: Universe, _ uuid: UUID)
     {
         self.universe = universe
         self.uuid = uuid
@@ -178,7 +178,7 @@ public class Connection<T>: TransmissionTypes.Connection  where T: Stateful
 
 extension Universe
 {
-    public func connect(_ address: String, _ port: Int) throws -> Connection<State>
+    public func connect(_ address: String, _ port: Int) throws -> Connection
     {
         guard let connection = Connection(universe: self, address: address, port: port) else
         {

@@ -8,14 +8,14 @@ final class SpacetimeTests: XCTestCase {
     func testUniverse() throws
     {
         let simulation = Simulation(capabilities: Capabilities(display: true))
-        let universe = Universe<Int>(effects: simulation.effects, events: simulation.events)
+        let universe = Universe(effects: simulation.effects, events: simulation.events)
         universe.display("test1")
     }
 
     func testRandom() throws
     {
         let simulation = Simulation(capabilities: Capabilities(display: true, random: true))
-        let universe = Universe<Int>(effects: simulation.effects, events: simulation.events)
+        let universe = Universe(effects: simulation.effects, events: simulation.events)
         let r = universe.random()
         universe.display(r.string)
     }
@@ -41,7 +41,7 @@ final class SpacetimeTests: XCTestCase {
         try universe.run()
     }
 
-    class TestUniverse: Universe<Int>
+    class TestUniverse: Universe
     {
         public override func main() throws
         {
@@ -52,7 +52,7 @@ final class SpacetimeTests: XCTestCase {
         }
     }
 
-    class TestNetworkClientUniverse: Universe<Int>
+    class TestNetworkClientUniverse: Universe
     {
         public override func main() throws
         {
@@ -65,7 +65,7 @@ final class SpacetimeTests: XCTestCase {
         }
     }
 
-    class TestNetworkServerUniverse: Universe<Int>
+    class TestNetworkServerUniverse: Universe
     {
         public override func main() throws
         {

@@ -10,16 +10,13 @@ import SwiftQueue
 import Spacetime
 import Chord
 
-open class Universe<State> where State: Stateful
+open class Universe
 {
-    var state: State
     let effects: BlockingQueue<Effect>
     let events: BlockingQueue<Event>
 
     public init(effects: BlockingQueue<Effect>, events: BlockingQueue<Event>)
     {
-        self.state = State()
-
         self.effects = effects
         self.events = events
     }
@@ -34,19 +31,5 @@ open class Universe<State> where State: Stateful
 
     open func main() throws
     {
-    }
-}
-
-public protocol Stateful
-{
-    init()
-}
-
-extension Int: Stateful
-{
-    public init()
-    {
-        self = 0
-        return
     }
 }
