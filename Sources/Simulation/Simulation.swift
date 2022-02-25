@@ -97,7 +97,7 @@ public class Simulation
             {
                 case let request as ConnectRequest:
                     let uuid = UUID()
-                    let connection = TransmissionConnection(host: request.address, port: request.port, logger: nil)
+                    let connection = TransmissionConnection(host: request.address, port: request.port, type: request.type, logger: nil)
                     self.state.connections[uuid] = connection
                     let response = ConnectResponse(uuid)
                     events.enqueue(element: response)

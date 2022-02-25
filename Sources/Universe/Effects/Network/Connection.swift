@@ -16,9 +16,9 @@ public class Connection: TransmissionTypes.Connection
     public let universe: Universe
     public let uuid: UUID
 
-    public convenience init?(universe: Universe, address: String, port: Int)
+    public convenience init?(universe: Universe, address: String, port: Int, type: ConnectionType = .tcp)
     {
-        let request = ConnectRequest(address, port)
+        let request = ConnectRequest(address, port, type)
         universe.effects.enqueue(element: request)
 
         let queue = BlockingQueue<Result<UUID,Error>>()

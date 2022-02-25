@@ -6,15 +6,18 @@
 //
 
 import Foundation
+import TransmissionTypes
 
 public class ConnectRequest: Effect
 {
     public let address: String
     public let port: Int
+    public let type: ConnectionType
 
-    public init(_ address: String, _ port: Int)
+    public init(_ address: String, _ port: Int, _ type: ConnectionType)
     {
         self.address = address
         self.port = port
+        self.type = type
     }
 }
