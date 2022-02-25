@@ -169,15 +169,39 @@ public class Simulation
                         return
                     }
 
-                    guard let result = connection.read(size: Int(request.length)) else
+                    switch request.style
                     {
-                        let failure = Failure(request.id)
-                        events.enqueue(element: failure)
-                        return
-                    }
+                        case .exactSize(let size):
+                            guard let result = connection.read(size: size) else
+                            {
+                                let failure = Failure(request.id)
+                                events.enqueue(element: failure)
+                                return
+                            }
 
-                    let response = NetworkReadResponse(request.id, result)
-                    events.enqueue(element: response)
+                            let response = NetworkReadResponse(request.id, result)
+                            events.enqueue(element: response)
+                        case .maxSize(let size):
+                            guard let result = connection.read(maxSize: size) else
+                            {
+                                let failure = Failure(request.id)
+                                events.enqueue(element: failure)
+                                return
+                            }
+
+                            let response = NetworkReadResponse(request.id, result)
+                            events.enqueue(element: response)
+                        case .lengthPrefixSizeInBits(let prefixSize):
+                            guard let result = connection.readWithLengthPrefix(prefixSizeInBits: prefixSize) else
+                            {
+                                let failure = Failure(request.id)
+                                events.enqueue(element: failure)
+                                return
+                            }
+
+                            let response = NetworkReadResponse(request.id, result)
+                            events.enqueue(element: response)
+                    }
 
                 case let request as NetworkWriteRequest:
                     let uuid = request.socketId
@@ -188,15 +212,30 @@ public class Simulation
                         return
                     }
 
-                    guard connection.write(data: request.data) else
+                    if let prefixSize = request.lengthPrefixSizeInBits
                     {
-                        let failure = Failure(request.id)
-                        events.enqueue(element: failure)
-                        return
-                    }
+                        guard connection.writeWithLengthPrefix(data: request.data, prefixSizeInBits: prefixSize) else
+                        {
+                            let failure = Failure(request.id)
+                            events.enqueue(element: failure)
+                            return
+                        }
 
-                    let response = Affected(request.id)
-                    events.enqueue(element: response)
+                        let response = Affected(request.id)
+                        events.enqueue(element: response)
+                    }
+                    else
+                    {
+                        guard connection.write(data: request.data) else
+                        {
+                            let failure = Failure(request.id)
+                            events.enqueue(element: failure)
+                            return
+                        }
+
+                        let response = Affected(request.id)
+                        events.enqueue(element: response)
+                    }
 
                 default:
                     let failure = Failure()

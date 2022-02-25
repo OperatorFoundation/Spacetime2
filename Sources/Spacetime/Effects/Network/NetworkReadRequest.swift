@@ -10,11 +10,18 @@ import Foundation
 public class NetworkReadRequest: Effect
 {
     public let socketId: UUID
-    public let length: UInt64
+    public let style: NetworkReadStyle
 
-    public init(_ socketId: UUID, _ length: UInt64)
+    public init(_ socketId: UUID, _ style: NetworkReadStyle)
     {
         self.socketId = socketId
-        self.length = length
+        self.style = style
     }
+}
+
+public enum NetworkReadStyle
+{
+    case exactSize(Int)
+    case maxSize(Int)
+    case lengthPrefixSizeInBits(Int)
 }

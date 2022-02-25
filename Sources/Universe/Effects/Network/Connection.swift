@@ -73,7 +73,7 @@ public class Connection<T> where T: Stateful
 
     public func read(size: UInt64) -> Data
     {
-        let effect = NetworkReadRequest(self.uuid, size)
+        let effect = NetworkReadRequest(self.uuid, .exactSize(Int(size)))
         self.universe.effects.enqueue(element: effect)
 
         let queue = BlockingQueue<Data>()
