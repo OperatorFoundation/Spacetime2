@@ -40,7 +40,7 @@ let package = Package(
             dependencies: ["SwiftQueue", "Spacetime", "Chord", "Transmission"]),
         .testTarget(
             name: "SpacetimeTests",
-            dependencies: ["Universe", "Simulation", "Datable"]),
+            dependencies: ["Universe", "Simulation", "Datable", "Spacetime"]),
     ],
     swiftLanguageVersions: [.v5]
 )
