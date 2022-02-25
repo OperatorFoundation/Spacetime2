@@ -178,9 +178,9 @@ public class Connection: TransmissionTypes.Connection
 
 extension Universe
 {
-    public func connect(_ address: String, _ port: Int) throws -> Connection
+    public func connect(_ address: String, _ port: Int, _ type: ConnectionType = .tcp) throws -> Connection
     {
-        guard let connection = Connection(universe: self, address: address, port: port) else
+        guard let connection = Connection(universe: self, address: address, port: port, type: type) else
         {
             throw ConnectionError.connectionRefused
         }
