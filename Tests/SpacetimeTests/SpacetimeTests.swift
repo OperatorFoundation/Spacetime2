@@ -22,23 +22,50 @@ final class SpacetimeTests: XCTestCase {
 
     func testUniverseSubclass() throws
     {
+        let done = expectation(description: "awaited universe.run()")
+
         let simulation = Simulation(capabilities: Capabilities(display: true, random: true))
         let universe = TestUniverse(effects: simulation.effects, events: simulation.events)
-        try universe.run()
+
+        Task
+        {
+            try await universe.run()
+            done.fulfill()
+        }
+
+        wait(for: [done], timeout: 10)
     }
 
     func testUniverseSubclassNetworkClient() throws
     {
+        let done = expectation(description: "awaited universe.run()")
+
         let simulation = Simulation(capabilities: Capabilities(display: true, networkConnect: true, random: true))
         let universe = TestNetworkClientUniverse(effects: simulation.effects, events: simulation.events)
-        try universe.run()
+
+        Task
+        {
+            try await universe.run()
+            done.fulfill()
+        }
+
+        wait(for: [done], timeout: 10)
     }
 
     func testUniverseSubclassNetworkServer() throws
     {
+        let done = expectation(description: "awaited universe.run()")
+
         let simulation = Simulation(capabilities: Capabilities(display: true, networkListen: true, random: true))
         let universe = TestNetworkServerUniverse(effects: simulation.effects, events: simulation.events)
-        try universe.run()
+
+        Task
+        {
+            try await universe.run()
+            done.fulfill()
+        }
+
+        wait(for: [done], timeout: 10)
     }
 
     class TestUniverse: Universe

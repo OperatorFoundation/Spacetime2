@@ -21,7 +21,7 @@ open class Universe
         self.events = events
     }
 
-    public func run() throws
+    public func run() async throws
     {
         Task
         {
