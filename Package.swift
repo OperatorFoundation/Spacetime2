@@ -37,6 +37,7 @@ let package = Package(
             name: "Universe",
             dependencies: [
                 "Chord",
+                "Datable",
                 "SwiftQueue",
                 "Spacetime",
                 "TransmissionTypes",
