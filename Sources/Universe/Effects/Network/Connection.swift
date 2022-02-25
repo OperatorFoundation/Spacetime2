@@ -5,11 +5,13 @@
 //  Created by Dr. Brandon Wiley on 2/4/22.
 //
 
+import Chord
+import Datable
 import Foundation
 import Spacetime
-import Chord
+import TransmissionTypes
 
-public class Connection<T> where T: Stateful
+public class Connection<T>: TransmissionTypes.Connection  where T: Stateful
 {
     public let universe: Universe<T>
     public let uuid: UUID
@@ -71,9 +73,39 @@ public class Connection<T> where T: Stateful
         self.uuid = uuid
     }
 
-    public func read(size: UInt64) -> Data
+    public func read(size: Int) -> Data?
     {
-        let effect = NetworkReadRequest(self.uuid, .exactSize(Int(size)))
+        return self.read(.exactSize(size))
+    }
+
+    public func read(maxSize: Int) -> Data?
+    {
+        return self.read(.maxSize(maxSize))
+    }
+
+    public func readWithLengthPrefix(prefixSizeInBits: Int) -> Data?
+    {
+        return self.read(.lengthPrefixSizeInBits(prefixSizeInBits))
+    }
+
+    public func write(string: String) -> Bool
+    {
+        return self.write(data: string.data)
+    }
+
+    public func write(data: Data) -> Bool
+    {
+        return self.spacetimeWrite(data: data)
+    }
+
+    public func writeWithLengthPrefix(data: Data, prefixSizeInBits: Int) -> Bool
+    {
+        return self.spacetimeWrite(data: data, prefixSizeInBits: prefixSizeInBits)
+    }
+
+    func read(_ style: NetworkReadStyle) -> Data
+    {
+        let effect = NetworkReadRequest(self.uuid, style)
         self.universe.effects.enqueue(element: effect)
 
         let queue = BlockingQueue<Data>()
@@ -107,29 +139,40 @@ public class Connection<T> where T: Stateful
         return result
     }
 
-    public func write(data: Data)
+    public func spacetimeWrite(data: Data, prefixSizeInBits: Int? = nil) -> Bool
     {
-        let lock = DispatchGroup()
+        let effect = NetworkWriteRequest(self.uuid, data, prefixSizeInBits)
+        self.universe.effects.enqueue(element: effect)
 
-        lock.enter()
+        let queue = BlockingQueue<Bool>()
 
         Task
         {
-            let effect = NetworkWriteRequest(self.uuid, data)
-            self.universe.effects.enqueue(element: effect)
-
-            await withCheckedContinuation
+            let result = await withCheckedContinuation
             {
-                (continuation: CheckedContinuation<Void,Never>) in
+                (continuation: CheckedContinuation<Bool,Never>) in
 
-                let _ = self.universe.events.dequeue() // FIXME - check type of event
-                continuation.resume()
+                var maybeResult: Bool? = nil
+                while maybeResult == nil
+                {
+                    let result = universe.events.dequeue()
+                    switch result
+                    {
+                        case is Affected:
+                            maybeResult = true
+                        default:
+                            maybeResult = false
+                    }
+                }
+
+                continuation.resume(returning: maybeResult!)
             }
 
-            lock.leave()
+            queue.enqueue(element: result)
         }
 
-        lock.wait()
+        let result = queue.dequeue()
+        return result
     }
 }
 

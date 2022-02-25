@@ -25,6 +25,7 @@ let package = Package(
         .package(url: "https://github.com/OperatorFoundation/Datable", branch: "main"),
         .package(url: "https://github.com/OperatorFoundation/Chord", branch: "main"),
         .package(url: "https://github.com/OperatorFoundation/Transmission", branch: "main"),
+        .package(url: "https://github.com/OperatorFoundation/TransmissionTypes", branch: "main"),
     ],
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.
@@ -34,7 +35,12 @@ let package = Package(
             dependencies: []),
         .target(
             name: "Universe",
-            dependencies: ["SwiftQueue", "Spacetime", "Chord"]),
+            dependencies: [
+                "Chord",
+                "SwiftQueue",
+                "Spacetime",
+                "TransmissionTypes",
+            ]),
         .target(
             name: "Simulation",
             dependencies: ["SwiftQueue", "Spacetime", "Chord", "Transmission"]),
