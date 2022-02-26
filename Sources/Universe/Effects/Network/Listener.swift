@@ -34,7 +34,7 @@ public class Listener: TransmissionTypes.Listener
                     let result = universe.events.dequeue()
                     switch result
                     {
-                        case let response as AcceptResponse:
+                        case let response as ListenResponse:
                             maybeResult = response.socketId
                         case is Failure:
                             maybeResult = nil
@@ -91,7 +91,7 @@ public class Listener: TransmissionTypes.Listener
                     let result = universe.events.dequeue()
                     switch result
                     {
-                        case let response as ConnectResponse:
+                        case let response as AcceptResponse:
                             maybeResult = response.socketId
                         default:
                             continue
