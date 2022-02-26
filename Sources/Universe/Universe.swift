@@ -21,12 +21,9 @@ open class Universe
         self.events = events
     }
 
-    public func run() async throws
+    public func run() throws
     {
-        Task
-        {
-            try self.main()
-        }
+        try self.main()
     }
 
     open func main() throws

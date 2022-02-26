@@ -29,7 +29,7 @@ final class SpacetimeTests: XCTestCase {
 
         Task
         {
-            try await universe.run()
+            try universe.run()
             done.fulfill()
         }
 
@@ -45,7 +45,7 @@ final class SpacetimeTests: XCTestCase {
 
         Task
         {
-            try await universe.run()
+            try universe.run()
             done.fulfill()
         }
 
@@ -61,7 +61,7 @@ final class SpacetimeTests: XCTestCase {
 
         Task
         {
-            try await universe.run()
+            try universe.run()
             done.fulfill()
         }
 
