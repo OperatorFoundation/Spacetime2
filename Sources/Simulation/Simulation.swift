@@ -14,8 +14,8 @@ import Transmission
 public class Simulation
 {
     let capabilities: Capabilities
-    public let effects: LockFreeQueue<Effect> = LockFreeQueue<Effect>()
-    public let events: LockFreeQueue<Event> = LockFreeQueue<Event>()
+    public let effects: BlockingQueue<Effect> = BlockingQueue<Effect>()
+    public let events: BlockingQueue<Event> = BlockingQueue<Event>()
     public var state: SimulationState = SimulationState()
 
     public init(capabilities: Capabilities)
