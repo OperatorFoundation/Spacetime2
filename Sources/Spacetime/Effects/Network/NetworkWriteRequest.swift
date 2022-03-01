@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftHexTools
 
 public class NetworkWriteRequest: Effect
 {

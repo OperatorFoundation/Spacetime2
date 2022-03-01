@@ -21,9 +21,10 @@ let package = Package(
     dependencies: [
         // Dependencies declare other packages that this package depends on.
         // .package(url: /* package url */, from: "1.0.0"),
-        .package(url: "https://github.com/OperatorFoundation/SwiftQueue", branch: "main"),
-        .package(url: "https://github.com/OperatorFoundation/Datable", branch: "main"),
         .package(url: "https://github.com/OperatorFoundation/Chord", branch: "main"),
+        .package(url: "https://github.com/OperatorFoundation/Datable", branch: "main"),
+        .package(url: "https://github.com/OperatorFoundation/SwiftHexTools", branch: "main"),
+        .package(url: "https://github.com/OperatorFoundation/SwiftQueue", branch: "main"),
         .package(url: "https://github.com/OperatorFoundation/Transmission", branch: "main"),
         .package(url: "https://github.com/OperatorFoundation/TransmissionTypes", branch: "main"),
     ],
@@ -38,6 +39,7 @@ let package = Package(
             dependencies: [
                 "Chord",
                 "Datable",
+                "SwiftHexTools",
                 "SwiftQueue",
                 "Spacetime",
                 "TransmissionTypes",

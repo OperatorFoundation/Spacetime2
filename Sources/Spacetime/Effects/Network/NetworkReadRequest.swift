@@ -27,3 +27,19 @@ public enum NetworkReadStyle
     case maxSize(Int)
     case lengthPrefixSizeInBits(Int)
 }
+
+extension NetworkReadStyle: CustomStringConvertible
+{
+    public var description: String
+    {
+        switch self
+        {
+            case .exactSize(let size):
+                return ".exactSize(\(size))"
+            case .maxSize(let size):
+                return ".maxSize(\(size))"
+            case .lengthPrefixSizeInBits(let bits):
+                return ".lengthPrefixSizeInBits(\(bits))"
+        }
+    }
+}
