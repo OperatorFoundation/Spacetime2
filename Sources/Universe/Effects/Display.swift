@@ -12,25 +12,7 @@ extension Universe
 {
     public func display(_ string: String)
     {
-        let lock = DispatchGroup()
-
-        lock.enter()
-
-        Task
-        {
-            await withCheckedContinuation
-            {
-                (continuation: CheckedContinuation<Void,Never>) in
-
-                let effect = Display(string)
-                self.effects.enqueue(element: effect)
-                let _ = self.events.dequeue() // FIXME - check type of event
-                continuation.resume()
-            }
-
-            lock.leave()
-        }
-
-        lock.wait()
+        let _ = processEffect(Display(string))
+        return
     }
 }

@@ -16,7 +16,11 @@ final class SpacetimeTests: XCTestCase {
     {
         let simulation = Simulation(capabilities: Capabilities(display: true, random: true))
         let universe = Universe(effects: simulation.effects, events: simulation.events)
-        let r = universe.random()
+        guard let r = universe.random() else
+        {
+            XCTFail()
+            return
+        }
         universe.display(r.string)
     }
 
@@ -73,7 +77,11 @@ final class SpacetimeTests: XCTestCase {
         public override func main() throws
         {
             display("Hello universe!")
-            let r = random()
+            guard let r = self.random() else
+            {
+                XCTFail()
+                return
+            }
             display(r.string)
             display("done")
         }
@@ -84,7 +92,11 @@ final class SpacetimeTests: XCTestCase {
         public override func main() throws
         {
             let connection = try connect("127.0.0.1", 1234)
-            let r = random()
+            guard let r = self.random() else
+            {
+                XCTFail()
+                return
+            }
             let _ = connection.write(data: r.data)
             guard let result = connection.read(size: 4) else {return}
             display(result.string)
@@ -97,9 +109,17 @@ final class SpacetimeTests: XCTestCase {
         public override func main() throws
         {
             let listener = try listen("127.0.0.1", 1234)
-            let connection = listener.accept()
+            guard let connection = listener.accept() else
+            {
+                XCTFail()
+                return
+            }
 
-            let r = random()
+            guard let r = self.random() else
+            {
+                XCTFail()
+                return
+            }
             let _ = connection.write(data: r.data)
             guard let result = connection.read(size: 4) else {return}
             display(result.string)

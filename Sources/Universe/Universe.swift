@@ -5,20 +5,26 @@
 //  Created by Dr. Brandon Wiley on 2/3/22.
 //
 
-import Foundation
-import SwiftQueue
-import Spacetime
 import Chord
+import Foundation
+import Spacetime
+import SwiftQueue
 
 open class Universe
 {
     let effects: BlockingQueue<Effect>
     let events: BlockingQueue<Event>
+    var channels: [UUID: BlockingQueue<Event>] = [:]
 
     public init(effects: BlockingQueue<Effect>, events: BlockingQueue<Event>)
     {
         self.effects = effects
         self.events = events
+
+        Task
+        {
+            self.distributeEvents()
+        }
     }
 
     public func run() throws
@@ -28,5 +34,40 @@ open class Universe
 
     open func main() throws
     {
+    }
+
+    func processEffect(_ effect: Effect) -> Event
+    {
+        let channel = BlockingQueue<Event>()
+        self.channels[effect.id] = channel
+
+        self.effects.enqueue(element: effect)
+
+        let result = channel.dequeue()
+
+        return result
+    }
+
+    func distributeEvents()
+    {
+        while true
+        {
+            let event = self.events.dequeue()
+            guard let id = event.effectId else
+            {
+                print("Event without an id \(event)")
+                continue
+            }
+
+            guard let channel = self.channels[id] else
+            {
+                print("Unknown channel id \(id)")
+                continue
+            }
+
+            channel.enqueue(element: event)
+
+            self.channels.removeValue(forKey: id)
+        }
     }
 }

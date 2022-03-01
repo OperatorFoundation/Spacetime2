@@ -5,10 +5,9 @@
 //  Created by Dr. Brandon Wiley on 2/3/22.
 //
 
-import Foundation
-import SwiftQueue
-import Spacetime
 import Chord
+import Foundation
+import Spacetime
 import Transmission
 
 public class Simulation
@@ -98,9 +97,11 @@ public class Simulation
             switch effect
             {
                 case let request as ConnectRequest:
-                    let uuid = UUID()
-                    let connection = TransmissionConnection(host: request.address, port: request.port, type: request.type, logger: nil)
-                    self.state.connections[uuid] = connection
+                    guard let uuid = self.connect(host: request.address, port: request.port, type: request.type) else
+                    {
+                        return
+                    }
+
                     let response = ConnectResponse(uuid)
                     events.enqueue(element: response)
 
@@ -131,16 +132,16 @@ public class Simulation
                         return
                     }
 
-                    let acceptUuid = UUID()
-                    let accepted = listener.accept()
-                    self.state.connections[acceptUuid] = accepted
-                    let response = AcceptResponse(acceptUuid)
-                    events.enqueue(element: response)
+                    listener.accept(request: request, state: self.state, channel: self.events)
 
                 case let request as ListenRequest:
-                    let uuid = UUID()
-                    let listener = TransmissionListener(port: request.port, logger: nil)
-                    self.state.listeners[uuid] = listener
+                    guard let uuid = listen(port: request.port) else
+                    {
+                        let response = Failure()
+                        events.enqueue(element: response)
+                        return
+                    }
+
                     let response = ListenResponse(uuid)
                     events.enqueue(element: response)
 
@@ -171,39 +172,7 @@ public class Simulation
                         return
                     }
 
-                    switch request.style
-                    {
-                        case .exactSize(let size):
-                            guard let result = connection.read(size: size) else
-                            {
-                                let failure = Failure(request.id)
-                                events.enqueue(element: failure)
-                                return
-                            }
-
-                            let response = NetworkReadResponse(request.id, result)
-                            events.enqueue(element: response)
-                        case .maxSize(let size):
-                            guard let result = connection.read(maxSize: size) else
-                            {
-                                let failure = Failure(request.id)
-                                events.enqueue(element: failure)
-                                return
-                            }
-
-                            let response = NetworkReadResponse(request.id, result)
-                            events.enqueue(element: response)
-                        case .lengthPrefixSizeInBits(let prefixSize):
-                            guard let result = connection.readWithLengthPrefix(prefixSizeInBits: prefixSize) else
-                            {
-                                let failure = Failure(request.id)
-                                events.enqueue(element: failure)
-                                return
-                            }
-
-                            let response = NetworkReadResponse(request.id, result)
-                            events.enqueue(element: response)
-                    }
+                    connection.read(request: request, channel: self.events)
 
                 case let request as NetworkWriteRequest:
                     let uuid = request.socketId
@@ -214,30 +183,7 @@ public class Simulation
                         return
                     }
 
-                    if let prefixSize = request.lengthPrefixSizeInBits
-                    {
-                        guard connection.writeWithLengthPrefix(data: request.data, prefixSizeInBits: prefixSize) else
-                        {
-                            let failure = Failure(request.id)
-                            events.enqueue(element: failure)
-                            return
-                        }
-
-                        let response = Affected(request.id)
-                        events.enqueue(element: response)
-                    }
-                    else
-                    {
-                        guard connection.write(data: request.data) else
-                        {
-                            let failure = Failure(request.id)
-                            events.enqueue(element: failure)
-                            return
-                        }
-
-                        let response = Affected(request.id)
-                        events.enqueue(element: response)
-                    }
+                    connection.write(request: request, channel: self.events)
 
                 default:
                     let failure = Failure()
@@ -273,12 +219,40 @@ public class Simulation
             events.enqueue(element: failure)
         }
     }
+
+    func connect(host: String, port: Int, type: ConnectionType) -> UUID?
+    {
+        let uuid = UUID()
+        guard let networkConnection = TransmissionConnection(host: host, port: port, type: type, logger: nil) else
+        {
+            return nil
+        }
+
+        let connection = SimulationConnection(networkConnection)
+        self.state.connections[uuid] = connection
+
+        return uuid
+    }
+
+    func listen(port: Int) -> UUID?
+    {
+        let uuid = UUID()
+        guard let networkListener = TransmissionListener(port: port, logger: nil) else
+        {
+            return nil
+        }
+
+        let listener = SimulationListener(networkListener)
+        self.state.listeners[uuid] = listener
+
+        return uuid
+    }
 }
 
 public class SimulationState
 {
-    public var listeners: [UUID: TransmissionListener] = [:]
-    public var connections: [UUID: Connection] = [:]
+    public var listeners: [UUID: SimulationListener] = [:]
+    public var connections: [UUID: SimulationConnection] = [:]
 
     public init()
     {

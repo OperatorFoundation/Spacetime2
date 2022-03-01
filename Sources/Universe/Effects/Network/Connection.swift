@@ -18,10 +18,7 @@ public class Connection: TransmissionTypes.Connection
 
     public convenience init?(universe: Universe, address: String, port: Int, type: ConnectionType = .tcp)
     {
-        let request = ConnectRequest(address, port, type)
-        universe.effects.enqueue(element: request)
-
-        let result = universe.events.dequeue()
+        let result = universe.processEffect(ConnectRequest(address, port, type))
         switch result
         {
             case let response as ConnectResponse:
@@ -72,9 +69,7 @@ public class Connection: TransmissionTypes.Connection
 
     func read(_ style: NetworkReadStyle) -> Data
     {
-        let effect = NetworkReadRequest(self.uuid, style)
-        self.universe.effects.enqueue(element: effect)
-        let result = universe.events.dequeue()
+        let result = self.universe.processEffect(NetworkReadRequest(self.uuid, style))
         switch result
         {
             case let response as NetworkReadResponse:
@@ -86,9 +81,7 @@ public class Connection: TransmissionTypes.Connection
 
     public func spacetimeWrite(data: Data, prefixSizeInBits: Int? = nil) -> Bool
     {
-        let effect = NetworkWriteRequest(self.uuid, data, prefixSizeInBits)
-        self.universe.effects.enqueue(element: effect)
-        let result = universe.events.dequeue()
+        let result = self.universe.processEffect(NetworkWriteRequest(self.uuid, data, prefixSizeInBits))
         switch result
         {
             case is Affected:

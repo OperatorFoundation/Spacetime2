@@ -11,39 +11,16 @@ import Chord
 
 extension Universe
 {
-    public func random() -> UInt64
+    public func random() -> UInt64?
     {
-        let queue = BlockingQueue<UInt64>()
+        let result = processEffect(RandomRequest())
 
-        Task
+        switch result
         {
-            let result = await withCheckedContinuation
-            {
-                (continuation: CheckedContinuation<UInt64,Never>) in
-
-                let effect = RandomRequest()
-                self.effects.enqueue(element: effect)
-
-                var maybeResult: UInt64? = nil
-                while maybeResult == nil
-                {
-                    let result = self.events.dequeue()
-                    switch result
-                    {
-                        case let response as RandomResponse:
-                            maybeResult = response.value
-                        default:
-                            continue
-                    }
-                }
-
-                continuation.resume(returning: maybeResult!)
-            }
-
-            queue.enqueue(element: result)
+            case let response as RandomResponse:
+                return response.value
+            default:
+                return nil
         }
-
-        let result = queue.dequeue()
-        return result
     }
 }

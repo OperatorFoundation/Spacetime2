@@ -10,16 +10,14 @@ import Foundation
 import Spacetime
 import TransmissionTypes
 
-public class Listener: TransmissionTypes.Listener
+public class Listener
 {
     public let universe: Universe
     public let uuid: UUID
 
     public convenience init(universe: Universe, address: String, port: Int) throws
     {
-        let request = ListenRequest(address, port)
-        universe.effects.enqueue(element: request)
-        let result = universe.events.dequeue()
+        let result = universe.processEffect(ListenRequest(address, port))
         switch result
         {
             case let response as ListenResponse:
@@ -38,40 +36,16 @@ public class Listener: TransmissionTypes.Listener
         self.uuid = uuid
     }
 
-    public func accept() -> TransmissionTypes.Connection
+    public func accept() -> TransmissionTypes.Connection?
     {
-        let request = AcceptRequest(self.uuid)
-        universe.effects.enqueue(element: request)
-
-        let queue = BlockingQueue<UUID>()
-
-        Task
+        let result = self.universe.processEffect(AcceptRequest(self.uuid))
+        switch result
         {
-            let result = await withCheckedContinuation
-            {
-                (continuation: CheckedContinuation<UUID,Never>) in
-
-                var maybeResult: UUID? = nil
-                while maybeResult == nil
-                {
-                    let result = universe.events.dequeue()
-                    switch result
-                    {
-                        case let response as AcceptResponse:
-                            maybeResult = response.socketId
-                        default:
-                            continue
-                    }
-                }
-
-                continuation.resume(returning: maybeResult!)
-            }
-
-            queue.enqueue(element: result)
+            case let response as AcceptResponse:
+                return Connection(universe: self.universe, response.socketId)
+            default:
+                return nil
         }
-
-        let result = queue.dequeue()
-        return Connection(universe: self.universe, result)
     }
 }
 
