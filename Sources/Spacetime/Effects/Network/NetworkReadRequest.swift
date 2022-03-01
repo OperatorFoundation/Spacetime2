@@ -16,6 +16,8 @@ public class NetworkReadRequest: Effect
     {
         self.socketId = socketId
         self.style = style
+
+        super.init()
     }
 }
 

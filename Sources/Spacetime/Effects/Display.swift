@@ -14,5 +14,7 @@ public class Display: Effect
     public init(_ string: String)
     {
         self.string = string
+
+        super.init()
     }
 }

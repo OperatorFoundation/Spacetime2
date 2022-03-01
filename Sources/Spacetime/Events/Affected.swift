@@ -9,4 +9,8 @@ import Foundation
 
 public class Affected: Event
 {
+    public init(_ effectId: UUID)
+    {
+        super.init(effectId)
+    }
 }

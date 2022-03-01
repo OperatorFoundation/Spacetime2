@@ -11,5 +11,6 @@ public class RandomRequest: Effect
 {
     public override init()
     {
+        super.init()
     }
 }

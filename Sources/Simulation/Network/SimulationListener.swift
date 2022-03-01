@@ -53,7 +53,7 @@ public struct Accept
             let networkAccepted = networkListener.accept()
             let accepted = SimulationConnection(networkAccepted)
             state.connections[uuid] = accepted
-            let response = AcceptResponse(uuid)
+            let response = AcceptResponse(request.id, uuid)
             events.enqueue(element: response)
             simulationListener.accepts.removeValue(forKey: uuid)
         }

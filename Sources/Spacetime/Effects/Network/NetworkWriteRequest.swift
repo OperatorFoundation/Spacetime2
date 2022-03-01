@@ -18,5 +18,7 @@ public class NetworkWriteRequest: Effect
         self.socketId = socketId
         self.data = data
         self.lengthPrefixSizeInBits = lengthPrefixSizeInBits
+
+        super.init()
     }
 }

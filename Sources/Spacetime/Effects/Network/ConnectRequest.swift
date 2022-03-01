@@ -19,5 +19,7 @@ public class ConnectRequest: Effect
         self.address = address
         self.port = port
         self.type = type
+
+        super.init()
     }
 }

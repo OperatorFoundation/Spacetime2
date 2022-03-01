@@ -11,8 +11,10 @@ public class ListenResponse: Event
 {
     public let socketId: UUID
 
-    public init(_ socketId: UUID)
+    public init(_ effectId: UUID, _ socketId: UUID)
     {
         self.socketId = socketId
+
+        super.init(effectId)
     }
 }

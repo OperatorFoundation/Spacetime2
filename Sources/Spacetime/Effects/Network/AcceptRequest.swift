@@ -14,5 +14,7 @@ public class AcceptRequest: Effect
     public init(_ socketId: UUID)
     {
         self.socketId = socketId
+
+        super.init()
     }
 }

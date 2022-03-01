@@ -62,7 +62,7 @@ public class Simulation
                     handleRandom(effect)
 
                 default:
-                    let failure = Failure()
+                    let failure = Failure(effect.id)
                     events.enqueue(element: failure)
             }
         }
@@ -76,16 +76,16 @@ public class Simulation
             {
                 case let display as Display:
                     print(display.string)
-                    let affected = Affected()
+                    let affected = Affected(effect.id)
                     events.enqueue(element: affected)
                 default:
-                    let failure = Failure()
+                    let failure = Failure(effect.id)
                     events.enqueue(element: failure)
             }
         }
         else
         {
-            let failure = Failure()
+            let failure = Failure(effect.id)
             events.enqueue(element: failure)
         }
     }
@@ -102,17 +102,17 @@ public class Simulation
                         return
                     }
 
-                    let response = ConnectResponse(uuid)
+                    let response = ConnectResponse(effect.id, uuid)
                     events.enqueue(element: response)
 
                 default:
-                    let failure = Failure()
+                    let failure = Failure(effect.id)
                     events.enqueue(element: failure)
             }
         }
         else
         {
-            let failure = Failure()
+            let failure = Failure(effect.id)
             events.enqueue(element: failure)
         }
     }
@@ -137,22 +137,22 @@ public class Simulation
                 case let request as ListenRequest:
                     guard let uuid = listen(port: request.port) else
                     {
-                        let response = Failure()
+                        let response = Failure(effect.id)
                         events.enqueue(element: response)
                         return
                     }
 
-                    let response = ListenResponse(uuid)
+                    let response = ListenResponse(effect.id, uuid)
                     events.enqueue(element: response)
 
                 default:
-                    let failure = Failure()
+                    let failure = Failure(effect.id)
                     events.enqueue(element: failure)
             }
         }
         else
         {
-            let failure = Failure()
+            let failure = Failure(effect.id)
             events.enqueue(element: failure)
         }
     }
@@ -186,13 +186,13 @@ public class Simulation
                     connection.write(request: request, channel: self.events)
 
                 default:
-                    let failure = Failure()
+                    let failure = Failure(effect.id)
                     events.enqueue(element: failure)
             }
         }
         else
         {
-            let failure = Failure()
+            let failure = Failure(effect.id)
             events.enqueue(element: failure)
         }
     }
@@ -209,13 +209,13 @@ public class Simulation
                     events.enqueue(element: response)
 
                 default:
-                    let failure = Failure()
+                    let failure = Failure(effect.id)
                     events.enqueue(element: failure)
             }
         }
         else
         {
-            let failure = Failure()
+            let failure = Failure(effect.id)
             events.enqueue(element: failure)
         }
     }

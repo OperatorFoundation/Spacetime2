@@ -9,4 +9,8 @@ import Foundation
 
 public class Failure: Event
 {
+    public init(_ effectId: UUID)
+    {
+        super.init(effectId)
+    }
 }

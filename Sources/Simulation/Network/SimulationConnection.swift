@@ -65,7 +65,7 @@ public struct Read
                         return
                     }
 
-                    let response = NetworkReadResponse(request.id, result)
+                    let response = NetworkReadResponse(request.id, request.socketId, result)
                     events.enqueue(element: response)
                 case .maxSize(let size):
                     guard let result = networkConnection.read(maxSize: size) else
@@ -75,7 +75,7 @@ public struct Read
                         return
                     }
 
-                    let response = NetworkReadResponse(request.id, result)
+                    let response = NetworkReadResponse(request.id, request.socketId, result)
                     events.enqueue(element: response)
                 case .lengthPrefixSizeInBits(let prefixSize):
                     guard let result = networkConnection.readWithLengthPrefix(prefixSizeInBits: prefixSize) else
@@ -85,7 +85,7 @@ public struct Read
                         return
                     }
 
-                    let response = NetworkReadResponse(request.id, result)
+                    let response = NetworkReadResponse(request.id, request.socketId, result)
                     events.enqueue(element: response)
             }
 
