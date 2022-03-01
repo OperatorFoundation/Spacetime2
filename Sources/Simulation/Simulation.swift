@@ -14,8 +14,8 @@ import Transmission
 public class Simulation
 {
     let capabilities: Capabilities
-    public let effects: BlockingQueue<Effect> = BlockingQueue<Effect>()
-    public let events: BlockingQueue<Event> = BlockingQueue<Event>()
+    public let effects: BlockingQueue<Effect> = BlockingQueue<Effect>(name: "Spacetime.effects")
+    public let events: BlockingQueue<Event> = BlockingQueue<Event>(name: "Spacetime.events")
     public var state: SimulationState = SimulationState()
 
     public init(capabilities: Capabilities)
