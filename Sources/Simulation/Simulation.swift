@@ -32,7 +32,9 @@ public class Simulation
     {
         while true
         {
+            print("handleEvent getting event")
             let effect = effects.dequeue()
+            print("handleEvent got event \(effect)")
 
             switch effect
             {

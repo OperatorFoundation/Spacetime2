@@ -98,6 +98,7 @@ final class SpacetimeTests: XCTestCase {
         {
             let listener = try listen("127.0.0.1", 1234)
             let connection = listener.accept()
+
             let r = random()
             let _ = connection.write(data: r.data)
             guard let result = connection.read(size: 4) else {return}
