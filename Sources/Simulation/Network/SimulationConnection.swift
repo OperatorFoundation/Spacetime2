@@ -40,7 +40,7 @@ public struct Read
     let networkConnection: TransmissionTypes.Connection
     let request: NetworkReadRequest
     let events: BlockingQueue<Event>
-    let task: Task<Void, Never>
+    let queue = DispatchQueue(label: "SimulationConnection.Read")
     let response: NetworkReadResponse? = nil
     let uuid = UUID()
 
@@ -53,7 +53,7 @@ public struct Read
 
         let uuid = self.uuid
 
-        self.task = Task
+        self.queue.async
         {
             switch request.style
             {
@@ -100,7 +100,7 @@ public struct Write
     let networkConnection: TransmissionTypes.Connection
     let request: NetworkWriteRequest
     let events: BlockingQueue<Event>
-    let task: Task<Void, Never>
+    let queue = DispatchQueue(label: "SimulationConnection.Write")
     let uuid = UUID()
 
     public init(simulationConnection: SimulationConnection, networkConnection: TransmissionTypes.Connection, request: NetworkWriteRequest, events: BlockingQueue<Event>)
@@ -112,7 +112,7 @@ public struct Write
 
         let uuid = self.uuid
 
-        self.task = Task
+        queue.async
         {
             if let prefixSize = request.lengthPrefixSizeInBits
             {

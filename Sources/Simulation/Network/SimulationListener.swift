@@ -33,7 +33,7 @@ public struct Accept
     let networkListener: TransmissionTypes.Listener
     let request: AcceptRequest
     let events: BlockingQueue<Event>
-    let task: Task<Void, Never>
+    let queue = DispatchQueue(label: "SimulationListener.Accept")
     let response: AcceptResponse? = nil
     let state: SimulationState
     let uuid = UUID()
@@ -48,7 +48,7 @@ public struct Accept
 
         let uuid = self.uuid
 
-        self.task = Task
+        self.queue.async
         {
             let networkAccepted = networkListener.accept()
             let accepted = SimulationConnection(networkAccepted)

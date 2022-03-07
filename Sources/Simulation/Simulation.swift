@@ -16,12 +16,13 @@ public class Simulation
     public let effects: BlockingQueue<Effect> = BlockingQueue<Effect>(name: "Spacetime.effects")
     public let events: BlockingQueue<Event> = BlockingQueue<Event>(name: "Spacetime.events")
     public var state: SimulationState = SimulationState()
+    let queue = DispatchQueue(label: "Simulation.handleEvents")
 
     public init(capabilities: Capabilities)
     {
         self.capabilities = capabilities
 
-        Task
+        self.queue.async
         {
             self.handleEvents()
         }

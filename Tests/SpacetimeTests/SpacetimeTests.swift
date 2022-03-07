@@ -31,10 +31,19 @@ final class SpacetimeTests: XCTestCase {
         let simulation = Simulation(capabilities: Capabilities(display: true, random: true))
         let universe = TestUniverse(effects: simulation.effects, events: simulation.events)
 
-        Task
+        let queue = DispatchQueue(label: "testUniverseSubclass.run")
+        queue.async
         {
-            try universe.run()
-            done.fulfill()
+            do
+            {
+                try universe.run()
+                done.fulfill()
+            }
+            catch
+            {
+                XCTFail()
+                return
+            }
         }
 
         wait(for: [done], timeout: 10)
@@ -47,10 +56,19 @@ final class SpacetimeTests: XCTestCase {
         let simulation = Simulation(capabilities: Capabilities(display: true, networkConnect: true, random: true))
         let universe = TestNetworkClientUniverse(effects: simulation.effects, events: simulation.events)
 
-        Task
+        let queue = DispatchQueue(label: "testUniverseSubclassNetworkClient.run")
+        queue.async
         {
-            try universe.run()
-            done.fulfill()
+            do
+            {
+                try universe.run()
+                done.fulfill()
+            }
+            catch
+            {
+                XCTFail()
+                return
+            }
         }
 
         wait(for: [done], timeout: 10)
@@ -63,10 +81,19 @@ final class SpacetimeTests: XCTestCase {
         let simulation = Simulation(capabilities: Capabilities(display: true, networkListen: true, random: true))
         let universe = TestNetworkServerUniverse(effects: simulation.effects, events: simulation.events)
 
-        Task
+        let queue = DispatchQueue(label: "testUniverseSubclassNetworkServer.run")
+        queue.async
         {
-            try universe.run()
-            done.fulfill()
+            do
+            {
+                try universe.run()
+                done.fulfill()
+            }
+            catch
+            {
+                XCTFail()
+                return
+            }
         }
 
         wait(for: [done], timeout: 10)
