@@ -56,7 +56,9 @@ open class Universe
     {
         while true
         {
+            print("starting to dequeue event")
             let event = self.events.dequeue()
+            print("finished dequeueing event")
             guard let id = event.effectId else
             {
                 print("Event without an id \(event)")
