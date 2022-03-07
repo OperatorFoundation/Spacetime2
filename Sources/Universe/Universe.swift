@@ -41,9 +41,13 @@ open class Universe
         let channel = BlockingQueue<Event>()
         self.channels[effect.id] = channel
 
+        print("calling effects.enqueue")
         self.effects.enqueue(element: effect)
-
+        print("effects.enqueue finished")
+        
+        print("calling effects.dequeue")
         let result = channel.dequeue()
+        print("effects.dequeue finished")
 
         return result
     }
