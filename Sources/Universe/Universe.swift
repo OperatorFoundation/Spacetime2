@@ -21,7 +21,8 @@ open class Universe
         self.effects = effects
         self.events = events
 
-        Task
+        let queue = DispatchQueue(label: "distributeEvents")
+        queue.async
         {
             self.distributeEvents()
         }
