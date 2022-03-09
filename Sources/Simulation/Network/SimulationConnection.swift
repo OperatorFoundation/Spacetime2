@@ -13,9 +13,9 @@ import TransmissionTypes
 public class SimulationConnection
 {
     let networkConnection: TransmissionTypes.Connection
-    var reads: [UUID: Read] = [:]
-    var writes: [UUID: Write] = [:]
-    var closes: [UUID: Close] = [:]
+    fileprivate var reads: [UUID: Read] = [:]
+    fileprivate var writes: [UUID: Write] = [:]
+    fileprivate var closes: [UUID: Close] = [:]
 
     public init(_ networkConnection: TransmissionTypes.Connection)
     {
@@ -34,14 +34,14 @@ public class SimulationConnection
         self.writes[write.uuid] = write
     }
 
-    public func close(request: NetworkCloseRequest, channel: BlockingQueue<Event>)
+    public func close(request: NetworkCloseRequest, state: SimulationState, channel: BlockingQueue<Event>)
     {
-        let close = Close(simulationConnection: self, networkConnection: self.networkConnection, request: request, events: channel)
+        let close = Close(simulationConnection: self, networkConnection: self.networkConnection, state: state, request: request, events: channel)
         self.closes[close.uuid] = close
     }
 }
 
-public struct Read
+fileprivate struct Read
 {
     let simulationConnection: SimulationConnection
     let networkConnection: TransmissionTypes.Connection
@@ -101,7 +101,7 @@ public struct Read
     }
 }
 
-public struct Write
+fileprivate struct Write
 {
     let simulationConnection: SimulationConnection
     let networkConnection: TransmissionTypes.Connection
@@ -151,19 +151,21 @@ public struct Write
     }
 }
 
-public struct Close
+fileprivate struct Close
 {
     let simulationConnection: SimulationConnection
     let networkConnection: TransmissionTypes.Connection
     let request: NetworkCloseRequest
+    let state: SimulationState
     let events: BlockingQueue<Event>
     let queue = DispatchQueue(label: "SimulationConnection.Close")
     let uuid = UUID()
 
-    public init(simulationConnection: SimulationConnection, networkConnection: TransmissionTypes.Connection, request: NetworkCloseRequest, events: BlockingQueue<Event>)
+    public init(simulationConnection: SimulationConnection, networkConnection: TransmissionTypes.Connection, state: SimulationState, request: NetworkCloseRequest, events: BlockingQueue<Event>)
     {
         self.simulationConnection = simulationConnection
         self.networkConnection = networkConnection
+        self.state = state
         self.request = request
         self.events = events
 
@@ -171,11 +173,12 @@ public struct Close
 
         queue.async
         {
-            self.networkConnection.close()
+            networkConnection.close()
 
             let response = Affected(request.id)
             events.enqueue(element: response)
 
+            state.connections.removeValue(forKey: uuid)
             simulationConnection.closes.removeValue(forKey: uuid)
         }
     }

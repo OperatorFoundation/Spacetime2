@@ -56,6 +56,8 @@ public class Simulation
                     handleNetwork(effect)
                 case is NetworkWriteRequest:
                     handleNetwork(effect)
+                case is NetworkCloseRequest:
+                    handleNetwork(effect)
 
                 // random
                 case is RandomRequest:
@@ -184,6 +186,23 @@ public class Simulation
                     }
 
                     connection.write(request: request, channel: self.events)
+
+                case let request as NetworkCloseRequest:
+                    let uuid = request.socketId
+                    if let connection = self.state.connections[uuid]
+                    {
+                        connection.close(request: request, state: self.state, channel: self.events)
+                    }
+                    else if let listener = self.state.listeners[uuid]
+                    {
+                        listener.close(request: request, state: self.state, channel: self.events)
+                    }
+                    else
+                    {
+                        let failure = Failure(request.id)
+                        events.enqueue(element: failure)
+                        return
+                    }
 
                 default:
                     let failure = Failure(effect.id)
