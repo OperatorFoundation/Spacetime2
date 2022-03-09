@@ -49,6 +49,18 @@ public class Listener
                 return nil
         }
     }
+
+    public func close()
+    {
+        let result = self.universe.processEffect(NetworkCloseRequest(self.uuid))
+        switch result
+        {
+            case is Affected:
+                return
+            default:
+                return
+        }
+    }
 }
 
 extension Universe

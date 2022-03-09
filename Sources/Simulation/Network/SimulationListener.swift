@@ -50,7 +50,7 @@ public struct Accept
 
         self.queue.async
         {
-            let networkAccepted = networkListener.accept()
+            let networkAccepted = try networkListener.accept()
             let accepted = SimulationConnection(networkAccepted)
             state.connections[uuid] = accepted
             let response = AcceptResponse(request.id, uuid)

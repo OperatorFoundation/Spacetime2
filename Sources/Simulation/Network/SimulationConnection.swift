@@ -15,6 +15,7 @@ public class SimulationConnection
     let networkConnection: TransmissionTypes.Connection
     var reads: [UUID: Read] = [:]
     var writes: [UUID: Write] = [:]
+    var closes: [UUID: Close] = [:]
 
     public init(_ networkConnection: TransmissionTypes.Connection)
     {
@@ -31,6 +32,12 @@ public class SimulationConnection
     {
         let write = Write(simulationConnection: self, networkConnection: self.networkConnection, request: request, events: channel)
         self.writes[write.uuid] = write
+    }
+
+    public func close(request: NetworkCloseRequest, channel: BlockingQueue<Event>)
+    {
+        let close = Close(simulationConnection: self, networkConnection: self.networkConnection, request: request, events: channel)
+        self.closes[close.uuid] = close
     }
 }
 
@@ -140,6 +147,36 @@ public struct Write
             }
 
             simulationConnection.writes.removeValue(forKey: uuid)
+        }
+    }
+}
+
+public struct Close
+{
+    let simulationConnection: SimulationConnection
+    let networkConnection: TransmissionTypes.Connection
+    let request: NetworkCloseRequest
+    let events: BlockingQueue<Event>
+    let queue = DispatchQueue(label: "SimulationConnection.Close")
+    let uuid = UUID()
+
+    public init(simulationConnection: SimulationConnection, networkConnection: TransmissionTypes.Connection, request: NetworkCloseRequest, events: BlockingQueue<Event>)
+    {
+        self.simulationConnection = simulationConnection
+        self.networkConnection = networkConnection
+        self.request = request
+        self.events = events
+
+        let uuid = self.uuid
+
+        queue.async
+        {
+            self.networkConnection.close()
+
+            let response = Affected(request.id)
+            events.enqueue(element: response)
+
+            simulationConnection.closes.removeValue(forKey: uuid)
         }
     }
 }

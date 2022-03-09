@@ -67,6 +67,18 @@ public class Connection: TransmissionTypes.Connection
         return self.spacetimeWrite(data: data, prefixSizeInBits: prefixSizeInBits)
     }
 
+    public func close()
+    {
+        let result = self.universe.processEffect(NetworkCloseRequest(self.uuid))
+        switch result
+        {
+            case is Affected:
+                return
+            default:
+                return
+        }
+    }
+
     func read(_ style: NetworkReadStyle) -> Data
     {
         let result = self.universe.processEffect(NetworkReadRequest(self.uuid, style))
