@@ -51,7 +51,7 @@ extension Effect: CustomStringConvertible
             case let read as NetworkReadRequest:
                 return "NetworkReadRequest[id: \(read.id), socketId: \(read.socketId), style: \(read.style.description)]"
             default:
-                return "\(type(of: self))[id: \(self.id)]"
+                return "UnknownEffect[\(type(of: self)), id: \(self.id)]"
         }
     }
 }

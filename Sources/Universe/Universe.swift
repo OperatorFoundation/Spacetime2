@@ -42,13 +42,9 @@ open class Universe
         let channel = BlockingQueue<Event>()
         self.channels[effect.id] = channel
 
-        print("calling effects.enqueue")
         self.effects.enqueue(element: effect)
-        print("effects.enqueue finished")
-        
-        print("calling effects.dequeue")
+
         let result = channel.dequeue()
-        print("effects.dequeue finished")
 
         return result
     }
@@ -57,9 +53,7 @@ open class Universe
     {
         while true
         {
-            print("starting to dequeue event")
             let event = self.events.dequeue()
-            print("finished dequeueing event")
             guard let id = event.effectId else
             {
                 print("Event without an id \(event)")
@@ -73,6 +67,7 @@ open class Universe
             }
 
             channel.enqueue(element: event)
+            print(event.description)
 
             self.channels.removeValue(forKey: id)
         }

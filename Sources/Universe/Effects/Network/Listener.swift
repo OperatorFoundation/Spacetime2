@@ -17,9 +17,7 @@ public class Listener
 
     public convenience init(universe: Universe, address: String, port: Int) throws
     {
-        print("listener.init - calling process effect")
         let result = universe.processEffect(ListenRequest(address, port))
-        print("listener process finished")
         switch result
         {
             case let response as ListenResponse:
