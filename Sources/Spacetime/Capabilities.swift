@@ -13,12 +13,14 @@ public struct Capabilities
     public let networkConnect: Bool
     public let networkListen: Bool
     public let random: Bool
+    public let persistence: Bool
 
-    public init(display: Bool, networkConnect: Bool = false, networkListen: Bool = false, random: Bool = false)
+    public init(display: Bool, networkConnect: Bool = false, networkListen: Bool = false, random: Bool = false, persistence: Bool = false)
     {
         self.display = display
         self.networkConnect = networkConnect
         self.networkListen = networkListen
         self.random = random
+        self.persistence = persistence
     }
 }

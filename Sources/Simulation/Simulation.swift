@@ -17,6 +17,8 @@ public class Simulation
     public let events: BlockingQueue<Event> = BlockingQueue<Event>(name: "Spacetime.events")
     public var state: SimulationState = SimulationState()
     let queue = DispatchQueue(label: "Simulation.handleEvents")
+    let dataDatabase = DataDatabase.instance
+    let relationshipDatabase = RelationshipDatabase.instance
 
     public init(capabilities: Capabilities)
     {
@@ -63,10 +65,103 @@ public class Simulation
                 case is RandomRequest:
                     handleRandom(effect)
 
+                case is DataDeleteRequest:
+                    handlePersistence(effect)
+                case is DataLoadRequest:
+                    handlePersistence(effect)
+                case is DataSaveRequest:
+                    handlePersistence(effect)
+                case is RelationshipQueryRequest:
+                    handlePersistence(effect)
+                case is RelationshipRemoveRequest:
+                    handlePersistence(effect)
+                case is RelationshipSaveRequest:
+                    handlePersistence(effect)
+
                 default:
                     let failure = Failure(effect.id)
                     events.enqueue(element: failure)
             }
+        }
+    }
+
+    func handlePersistence(_ effect: Effect)
+    {
+        if self.capabilities.persistence
+        {
+            switch effect
+            {
+                case let request as DataDeleteRequest:
+                    let result = self.dataDatabase.delete(identifier: request.dataId)
+                    let response = DataDeleteResponse(request.id, request.dataId, success: result)
+                    events.enqueue(element: response)
+
+                case let request as DataLoadRequest:
+                    do
+                    {
+                        let result = try self.dataDatabase.getStatic(identifier: request.dataId)
+                        let response = DataLoadResponse(request.id, request.dataId, success: true, data: result)
+                        events.enqueue(element: response)
+                    }
+                    catch
+                    {
+                        let response = DataLoadResponse(request.id, request.dataId, success: false, data: nil)
+                        events.enqueue(element: response)
+                    }
+
+                case let request as DataSaveRequest:
+                    do
+                    {
+                        try self.dataDatabase.save(identifier: request.dataId, type: request.type, data: request.data)
+                        let response = DataSaveResponse(request.id, request.dataId, success: true)
+                        events.enqueue(element: response)
+                    }
+                    catch
+                    {
+                        let response = DataSaveResponse(request.id, request.dataId, success: false)
+                        events.enqueue(element: response)
+                    }
+
+                case let request as RelationshipQueryRequest:
+                    let results = self.relationshipDatabase.query(subject: request.subject, relation: request.relation, object: request.object)
+                    let response = RelationshipQueryResponse(request.id, results)
+                    events.enqueue(element: response)
+
+                case let request as RelationshipRemoveRequest:
+                    do
+                    {
+                        try self.relationshipDatabase.remove(relationship: request.relationship)
+                        let result = RelationshipRemoveResponse(effect.id, true)
+                        events.enqueue(element: result)
+                    }
+                    catch
+                    {
+                        let result = RelationshipRemoveResponse(effect.id, false)
+                        events.enqueue(element: result)
+                    }
+
+                case let request as RelationshipSaveRequest:
+                    do
+                    {
+                        try self.relationshipDatabase.save(relationship: request.relationship)
+                        let result = RelationshipRemoveResponse(effect.id, true)
+                        events.enqueue(element: result)
+                    }
+                    catch
+                    {
+                        let result = RelationshipRemoveResponse(effect.id, false)
+                        events.enqueue(element: result)
+                    }
+
+                default:
+                    let failure = Failure(effect.id)
+                    events.enqueue(element: failure)
+            }
+        }
+        else
+        {
+            let failure = Failure(effect.id)
+            events.enqueue(element: failure)
         }
     }
 
