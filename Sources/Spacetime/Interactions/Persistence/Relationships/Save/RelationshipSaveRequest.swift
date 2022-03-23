@@ -15,6 +15,6 @@ public class RelationshipSaveRequest: Effect
     {
         self.relationship = relationship
 
-        super.init()
+        super.init(module: BuiltinModuleNames.persistence.rawValue)
     }
 }

@@ -15,6 +15,6 @@ public class RandomResponse: Event
     {
         self.value = value
         
-        super.init(effectId)
+        super.init(effectId, module: BuiltinModuleNames.random.rawValue)
     }
 }

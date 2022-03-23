@@ -17,6 +17,6 @@ public class ListenRequest: Effect
         self.address = address
         self.port = port
 
-        super.init()
+        super.init(module: BuiltinModuleNames.networkListen.rawValue)
     }
 }

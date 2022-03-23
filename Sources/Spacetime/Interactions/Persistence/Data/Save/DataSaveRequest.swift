@@ -19,6 +19,6 @@ public class DataSaveRequest: Effect
         self.type = type
         self.data = data
 
-        super.init()
+        super.init(module: BuiltinModuleNames.persistence.rawValue)
     }
 }

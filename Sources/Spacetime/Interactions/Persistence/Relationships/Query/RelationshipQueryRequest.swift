@@ -19,6 +19,6 @@ public class RelationshipQueryRequest: Effect
         self.relation = relation
         self.object = object
 
-        super.init()
+        super.init(module: BuiltinModuleNames.persistence.rawValue)
     }
 }

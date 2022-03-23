@@ -7,7 +7,7 @@
 
 import Foundation
 
-public class NetworkCloseRequest: Effect
+public class NetworkConnectCloseRequest: Effect
 {
     public let socketId: UUID
 
@@ -15,6 +15,6 @@ public class NetworkCloseRequest: Effect
     {
         self.socketId = socketId
 
-        super.init()
+        super.init(module: BuiltinModuleNames.networkConnect.rawValue)
     }
 }

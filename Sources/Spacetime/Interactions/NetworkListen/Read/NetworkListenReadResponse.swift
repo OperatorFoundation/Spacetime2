@@ -7,7 +7,7 @@
 
 import Foundation
 
-public class NetworkReadResponse: Event
+public class NetworkListenReadResponse: Event
 {
     public let socketId: UUID
     public let data: Data
@@ -17,6 +17,6 @@ public class NetworkReadResponse: Event
         self.socketId = socketId
         self.data = data
 
-        super.init(effectId)
+        super.init(effectId, module: BuiltinModuleNames.networkListen.rawValue)
     }
 }

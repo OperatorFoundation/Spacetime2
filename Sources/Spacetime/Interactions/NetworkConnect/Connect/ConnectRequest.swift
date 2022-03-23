@@ -20,6 +20,6 @@ public class ConnectRequest: Effect
         self.port = port
         self.type = type
 
-        super.init()
+        super.init(module: BuiltinModuleNames.networkConnect.rawValue)
     }
 }

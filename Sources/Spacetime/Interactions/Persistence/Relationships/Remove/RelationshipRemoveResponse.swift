@@ -15,6 +15,6 @@ public class RelationshipRemoveResponse: Event
     {
         self.success = success
 
-        super.init(effectId)
+        super.init(effectId, module: BuiltinModuleNames.persistence.rawValue)
     }
 }

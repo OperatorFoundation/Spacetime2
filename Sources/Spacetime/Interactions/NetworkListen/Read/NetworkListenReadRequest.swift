@@ -7,28 +7,28 @@
 
 import Foundation
 
-public class NetworkReadRequest: Effect
+public class NetworkListenReadRequest: Effect
 {
     public let socketId: UUID
-    public let style: NetworkReadStyle
+    public let style: NetworkListenReadStyle
 
-    public init(_ socketId: UUID, _ style: NetworkReadStyle)
+    public init(_ socketId: UUID, _ style: NetworkListenReadStyle)
     {
         self.socketId = socketId
         self.style = style
 
-        super.init()
+        super.init(module: BuiltinModuleNames.networkListen.rawValue)
     }
 }
 
-public enum NetworkReadStyle
+public enum NetworkListenReadStyle
 {
     case exactSize(Int)
     case maxSize(Int)
     case lengthPrefixSizeInBits(Int)
 }
 
-extension NetworkReadStyle: CustomStringConvertible
+extension NetworkListenReadStyle: CustomStringConvertible
 {
     public var description: String
     {

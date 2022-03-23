@@ -1,5 +1,5 @@
 //
-//  ListenResponse.swift
+//  ConnectResponse.swift
 //  
 //
 //  Created by Dr. Brandon Wiley on 2/4/22.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-public class ListenResponse: Event
+public class ConnectResponse: Event
 {
     public let socketId: UUID
 
@@ -15,6 +15,6 @@ public class ListenResponse: Event
     {
         self.socketId = socketId
 
-        super.init(effectId)
+        super.init(effectId, module: BuiltinModuleNames.networkConnect.rawValue)
     }
 }

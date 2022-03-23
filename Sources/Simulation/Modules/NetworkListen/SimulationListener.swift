@@ -21,13 +21,13 @@ public class SimulationListener
         self.networkListener = networkListener
     }
 
-    public func accept(request: AcceptRequest, state: SimulationState, channel: BlockingQueue<Event>)
+    public func accept(request: AcceptRequest, state: NetworkListenModule, channel: BlockingQueue<Event>)
     {
         let accept = Accept(simulationListener: self, networkListener: self.networkListener, state: state, request: request, events: channel)
         self.accepts[accept.uuid] = accept
     }
 
-    public func close(request: NetworkCloseRequest, state: SimulationState, channel: BlockingQueue<Event>)
+    public func close(request: NetworkListenCloseRequest, state: NetworkListenModule, channel: BlockingQueue<Event>)
     {
         let close = Close(simulationListener: self, networkListener: self.networkListener, state: state, request: request, events: channel)
         self.closes[close.uuid] = close
@@ -42,10 +42,10 @@ fileprivate struct Accept
     let events: BlockingQueue<Event>
     let queue = DispatchQueue(label: "SimulationListener.Accept")
     let response: AcceptResponse? = nil
-    let state: SimulationState
+    let state: NetworkListenModule
     let uuid = UUID()
 
-    public init(simulationListener: SimulationListener, networkListener: TransmissionTypes.Listener, state: SimulationState, request: AcceptRequest, events: BlockingQueue<Event>)
+    public init(simulationListener: SimulationListener, networkListener: TransmissionTypes.Listener, state: NetworkListenModule, request: AcceptRequest, events: BlockingQueue<Event>)
     {
         self.simulationListener = simulationListener
         self.networkListener = networkListener
@@ -60,7 +60,7 @@ fileprivate struct Accept
             do
             {
                 let networkAccepted = try networkListener.accept()
-                let accepted = SimulationConnection(networkAccepted)
+                let accepted = SimulationListenConnection(networkAccepted)
                 state.connections[uuid] = accepted
                 let response = AcceptResponse(request.id, uuid)
                 events.enqueue(element: response)
@@ -80,13 +80,13 @@ fileprivate struct Close
 {
     let simulationListener: SimulationListener
     let networkListener: TransmissionTypes.Listener
-    let state: SimulationState
-    let request: NetworkCloseRequest
+    let state: NetworkListenModule
+    let request: NetworkListenCloseRequest
     let events: BlockingQueue<Event>
     let queue = DispatchQueue(label: "SimulationConnection.Close")
     let uuid = UUID()
 
-    public init(simulationListener: SimulationListener, networkListener: TransmissionTypes.Listener, state: SimulationState, request: NetworkCloseRequest, events: BlockingQueue<Event>)
+    public init(simulationListener: SimulationListener, networkListener: TransmissionTypes.Listener, state: NetworkListenModule, request: NetworkListenCloseRequest, events: BlockingQueue<Event>)
     {
         self.simulationListener = simulationListener
         self.networkListener = networkListener

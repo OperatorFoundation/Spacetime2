@@ -15,6 +15,6 @@ public class RelationshipRemoveRequest: Effect
     {
         self.relationship = relationship
 
-        super.init()
+        super.init(module: BuiltinModuleNames.persistence.rawValue)
     }
 }

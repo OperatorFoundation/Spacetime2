@@ -10,7 +10,7 @@ import Foundation
 import Spacetime
 import TransmissionTypes
 
-public class SimulationConnection
+public class SimulationListenConnection
 {
     let networkConnection: TransmissionTypes.Connection
     fileprivate var reads: [UUID: Read] = [:]
@@ -22,19 +22,19 @@ public class SimulationConnection
         self.networkConnection = networkConnection
     }
 
-    public func read(request: NetworkReadRequest, channel: BlockingQueue<Event>)
+    public func read(request: NetworkListenReadRequest, channel: BlockingQueue<Event>)
     {
         let read = Read(simulationConnection: self, networkConnection: self.networkConnection, request: request, events: channel)
         self.reads[read.uuid] = read
     }
 
-    public func write(request: NetworkWriteRequest, channel: BlockingQueue<Event>)
+    public func write(request: NetworkListenWriteRequest, channel: BlockingQueue<Event>)
     {
         let write = Write(simulationConnection: self, networkConnection: self.networkConnection, request: request, events: channel)
         self.writes[write.uuid] = write
     }
 
-    public func close(request: NetworkCloseRequest, state: SimulationState, channel: BlockingQueue<Event>)
+    public func close(request: NetworkListenCloseRequest, state: NetworkListenModule, channel: BlockingQueue<Event>)
     {
         let close = Close(simulationConnection: self, networkConnection: self.networkConnection, state: state, request: request, events: channel)
         self.closes[close.uuid] = close
@@ -43,15 +43,15 @@ public class SimulationConnection
 
 fileprivate struct Read
 {
-    let simulationConnection: SimulationConnection
+    let simulationConnection: SimulationListenConnection
     let networkConnection: TransmissionTypes.Connection
-    let request: NetworkReadRequest
+    let request: NetworkListenReadRequest
     let events: BlockingQueue<Event>
     let queue = DispatchQueue(label: "SimulationConnection.Read")
-    let response: NetworkReadResponse? = nil
+    let response: NetworkListenReadResponse? = nil
     let uuid = UUID()
 
-    public init(simulationConnection: SimulationConnection, networkConnection: TransmissionTypes.Connection, request: NetworkReadRequest, events: BlockingQueue<Event>)
+    public init(simulationConnection: SimulationListenConnection, networkConnection: TransmissionTypes.Connection, request: NetworkListenReadRequest, events: BlockingQueue<Event>)
     {
         self.simulationConnection = simulationConnection
         self.networkConnection = networkConnection
@@ -72,7 +72,7 @@ fileprivate struct Read
                         return
                     }
 
-                    let response = NetworkReadResponse(request.id, request.socketId, result)
+                    let response = NetworkConnectReadResponse(request.id, request.socketId, result)
                     events.enqueue(element: response)
                 case .maxSize(let size):
                     guard let result = networkConnection.read(maxSize: size) else
@@ -82,7 +82,7 @@ fileprivate struct Read
                         return
                     }
 
-                    let response = NetworkReadResponse(request.id, request.socketId, result)
+                    let response = NetworkConnectReadResponse(request.id, request.socketId, result)
                     events.enqueue(element: response)
                 case .lengthPrefixSizeInBits(let prefixSize):
                     guard let result = networkConnection.readWithLengthPrefix(prefixSizeInBits: prefixSize) else
@@ -92,7 +92,7 @@ fileprivate struct Read
                         return
                     }
 
-                    let response = NetworkReadResponse(request.id, request.socketId, result)
+                    let response = NetworkConnectReadResponse(request.id, request.socketId, result)
                     events.enqueue(element: response)
             }
 
@@ -103,14 +103,14 @@ fileprivate struct Read
 
 fileprivate struct Write
 {
-    let simulationConnection: SimulationConnection
+    let simulationConnection: SimulationListenConnection
     let networkConnection: TransmissionTypes.Connection
-    let request: NetworkWriteRequest
+    let request: NetworkListenWriteRequest
     let events: BlockingQueue<Event>
     let queue = DispatchQueue(label: "SimulationConnection.Write")
     let uuid = UUID()
 
-    public init(simulationConnection: SimulationConnection, networkConnection: TransmissionTypes.Connection, request: NetworkWriteRequest, events: BlockingQueue<Event>)
+    public init(simulationConnection: SimulationListenConnection, networkConnection: TransmissionTypes.Connection, request: NetworkListenWriteRequest, events: BlockingQueue<Event>)
     {
         self.simulationConnection = simulationConnection
         self.networkConnection = networkConnection
@@ -153,15 +153,15 @@ fileprivate struct Write
 
 fileprivate struct Close
 {
-    let simulationConnection: SimulationConnection
+    let simulationConnection: SimulationListenConnection
     let networkConnection: TransmissionTypes.Connection
-    let request: NetworkCloseRequest
-    let state: SimulationState
+    let request: NetworkListenCloseRequest
+    let state: NetworkListenModule
     let events: BlockingQueue<Event>
     let queue = DispatchQueue(label: "SimulationConnection.Close")
     let uuid = UUID()
 
-    public init(simulationConnection: SimulationConnection, networkConnection: TransmissionTypes.Connection, state: SimulationState, request: NetworkCloseRequest, events: BlockingQueue<Event>)
+    public init(simulationConnection: SimulationListenConnection, networkConnection: TransmissionTypes.Connection, state: NetworkListenModule, request: NetworkListenCloseRequest, events: BlockingQueue<Event>)
     {
         self.simulationConnection = simulationConnection
         self.networkConnection = networkConnection

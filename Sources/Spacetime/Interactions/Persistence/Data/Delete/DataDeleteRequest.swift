@@ -15,6 +15,6 @@ public class DataDeleteRequest: Effect
     {
         self.dataId = dataId
 
-        super.init()
+        super.init(module: BuiltinModuleNames.persistence.rawValue)
     }
 }

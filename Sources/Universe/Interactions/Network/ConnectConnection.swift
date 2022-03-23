@@ -11,7 +11,7 @@ import Foundation
 import Spacetime
 import TransmissionTypes
 
-public class Connection: TransmissionTypes.Connection
+public class ConnectConnection: TransmissionTypes.Connection
 {
     public let universe: Universe
     public let uuid: UUID
@@ -69,7 +69,7 @@ public class Connection: TransmissionTypes.Connection
 
     public func close()
     {
-        let result = self.universe.processEffect(NetworkCloseRequest(self.uuid))
+        let result = self.universe.processEffect(NetworkConnectCloseRequest(self.uuid))
         switch result
         {
             case is Affected:
@@ -79,12 +79,12 @@ public class Connection: TransmissionTypes.Connection
         }
     }
 
-    func read(_ style: NetworkReadStyle) -> Data
+    func read(_ style: NetworkConnectReadStyle) -> Data
     {
-        let result = self.universe.processEffect(NetworkReadRequest(self.uuid, style))
+        let result = self.universe.processEffect(NetworkConnectReadRequest(self.uuid, style))
         switch result
         {
-            case let response as NetworkReadResponse:
+            case let response as NetworkConnectReadResponse:
                 return response.data
             default:
                 return Data()
@@ -93,7 +93,7 @@ public class Connection: TransmissionTypes.Connection
 
     public func spacetimeWrite(data: Data, prefixSizeInBits: Int? = nil) -> Bool
     {
-        let result = self.universe.processEffect(NetworkWriteRequest(self.uuid, data, prefixSizeInBits))
+        let result = self.universe.processEffect(NetworkConnectWriteRequest(self.uuid, data, prefixSizeInBits))
         switch result
         {
             case is Affected:
@@ -108,16 +108,16 @@ extension Universe
 {
     public func connect(_ address: String, _ port: Int, _ type: ConnectionType = .tcp) throws -> Connection
     {
-        guard let connection = Connection(universe: self, address: address, port: port, type: type) else
+        guard let connection = ConnectConnection(universe: self, address: address, port: port, type: type) else
         {
-            throw ConnectionError.connectionRefused
+            throw ConnectConnectionError.connectionRefused
         }
 
         return connection
     }
 }
 
-public enum ConnectionError: Error
+public enum ConnectConnectionError: Error
 {
     case connectionRefused
 }

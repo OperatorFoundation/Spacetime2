@@ -42,7 +42,7 @@ public class Listener
         switch result
         {
             case let response as AcceptResponse:
-                return Connection(universe: self.universe, response.socketId)
+                return ListenConnection(universe: self.universe, response.socketId)
             default:
                 return nil
         }
@@ -50,7 +50,7 @@ public class Listener
 
     public func close()
     {
-        let result = self.universe.processEffect(NetworkCloseRequest(self.uuid))
+        let result = self.universe.processEffect(NetworkListenCloseRequest(self.uuid))
         switch result
         {
             case is Affected:

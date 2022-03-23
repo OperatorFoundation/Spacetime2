@@ -19,6 +19,6 @@ public class DataLoadResponse: Event
         self.success = success
         self.data = data
 
-        super.init(effectId)
+        super.init(effectId, module: BuiltinModuleNames.persistence.rawValue)
     }
 }

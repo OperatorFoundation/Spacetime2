@@ -15,6 +15,6 @@ public class RelationshipQueryResponse: Event
     {
         self.results = results
 
-        super.init(effectId)
+        super.init(effectId, module: BuiltinModuleNames.persistence.rawValue)
     }
 }

@@ -8,7 +8,7 @@
 import Foundation
 import SwiftHexTools
 
-public class NetworkWriteRequest: Effect
+public class NetworkListenWriteRequest: Effect
 {
     public let socketId: UUID
     public let data: Data
@@ -20,6 +20,6 @@ public class NetworkWriteRequest: Effect
         self.data = data
         self.lengthPrefixSizeInBits = lengthPrefixSizeInBits
 
-        super.init()
+        super.init(module: BuiltinModuleNames.networkListen.rawValue)
     }
 }

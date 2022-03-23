@@ -15,6 +15,6 @@ public class DataLoadRequest: Effect
     {
         self.dataId = dataId
 
-        super.init()
+        super.init(module: BuiltinModuleNames.persistence.rawValue)
     }
 }

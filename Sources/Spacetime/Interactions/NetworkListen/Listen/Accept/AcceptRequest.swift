@@ -15,6 +15,6 @@ public class AcceptRequest: Effect
     {
         self.socketId = socketId
 
-        super.init()
+        super.init(module: BuiltinModuleNames.networkListen.rawValue)
     }
 }

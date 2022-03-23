@@ -11,6 +11,6 @@ public class Affected: Event
 {
     public init(_ effectId: UUID)
     {
-        super.init(effectId)
+        super.init(effectId, module: BuiltinModuleNames.general.rawValue)
     }
 }

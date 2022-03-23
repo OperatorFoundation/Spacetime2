@@ -9,8 +9,8 @@ import Foundation
 
 public class RandomRequest: Effect
 {
-    public override init()
+    public init()
     {
-        super.init()
+        super.init(module: BuiltinModuleNames.random.rawValue)
     }
 }
