@@ -67,7 +67,6 @@ open class Universe
             }
 
             channel.enqueue(element: event)
-            print(event.description)
 
             self.channels.removeValue(forKey: id)
         }
