@@ -47,7 +47,7 @@ fileprivate struct Read
     let networkConnection: TransmissionTypes.Connection
     let request: NetworkListenReadRequest
     let events: BlockingQueue<Event>
-    let queue = DispatchQueue(label: "SimulationConnection.Read")
+    let queue = DispatchQueue(label: "SimulationListenConnection.Read")
     let response: NetworkListenReadResponse? = nil
     let uuid = UUID()
 
@@ -72,8 +72,9 @@ fileprivate struct Read
                         return
                     }
 
-                    let response = NetworkConnectReadResponse(request.id, request.socketId, result)
+                    let response = NetworkListenReadResponse(request.id, request.socketId, result)
                     events.enqueue(element: response)
+
                 case .maxSize(let size):
                     guard let result = networkConnection.read(maxSize: size) else
                     {
@@ -82,8 +83,9 @@ fileprivate struct Read
                         return
                     }
 
-                    let response = NetworkConnectReadResponse(request.id, request.socketId, result)
+                    let response = NetworkListenReadResponse(request.id, request.socketId, result)
                     events.enqueue(element: response)
+
                 case .lengthPrefixSizeInBits(let prefixSize):
                     guard let result = networkConnection.readWithLengthPrefix(prefixSizeInBits: prefixSize) else
                     {
@@ -92,7 +94,7 @@ fileprivate struct Read
                         return
                     }
 
-                    let response = NetworkConnectReadResponse(request.id, request.socketId, result)
+                    let response = NetworkListenReadResponse(request.id, request.socketId, result)
                     events.enqueue(element: response)
             }
 
