@@ -37,7 +37,7 @@ open class Universe
     {
     }
 
-    func processEffect(_ effect: Effect) -> Event
+    public func processEffect(_ effect: Effect) -> Event
     {
         let channel = BlockingQueue<Event>()
         self.channels[effect.id] = channel
