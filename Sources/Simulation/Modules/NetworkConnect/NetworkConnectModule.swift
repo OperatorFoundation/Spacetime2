@@ -28,16 +28,22 @@ public class NetworkConnectModule: Module
             case let request as ConnectRequest:
                 guard let uuid = self.connect(host: request.address, port: request.port, type: request.type) else
                 {
-                    return Failure(effect.id)
+                    let failure = Failure(effect.id)
+                    print(failure.description)
+                    return failure
                 }
 
-                return ConnectResponse(effect.id, uuid)
+                let response = ConnectResponse(effect.id, uuid)
+                print(response.description)
+                return response
 
             case let request as NetworkConnectReadRequest:
                 let uuid = request.socketId
                 guard let connection = self.connections[uuid] else
                 {
-                    return Failure(request.id)
+                    let failure = Failure(effect.id)
+                    print(failure.description)
+                    return failure
                 }
 
                 connection.read(request: request, channel: channel)
@@ -47,7 +53,9 @@ public class NetworkConnectModule: Module
                 let uuid = request.socketId
                 guard let connection = self.connections[uuid] else
                 {
-                    return Failure(request.id)
+                    let failure = Failure(effect.id)
+                    print(failure.description)
+                    return failure
                 }
 
                 connection.write(request: request, channel: channel)
@@ -62,11 +70,15 @@ public class NetworkConnectModule: Module
                 }
                 else
                 {
-                    return Failure(request.id)
+                    let failure = Failure(effect.id)
+                    print(failure.description)
+                    return failure
                 }
 
             default:
-                return Failure(effect.id)
+                let failure = Failure(effect.id)
+                print(failure.description)
+                return failure
         }
     }
 

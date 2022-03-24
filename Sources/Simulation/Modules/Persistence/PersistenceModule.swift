@@ -27,58 +27,86 @@ public class PersistenceModule: Module
         {
             case let request as DataDeleteRequest:
                 let result = self.dataDatabase.delete(identifier: request.dataId)
-                return DataDeleteResponse(request.id, request.dataId, success: result)
+                let response = DataDeleteResponse(request.id, request.dataId, success: result)
+                print(response.description)
+                return response
 
             case let request as DataLoadRequest:
                 do
                 {
                     let result = try self.dataDatabase.getStatic(identifier: request.dataId)
-                    return DataLoadResponse(request.id, request.dataId, success: true, data: result)
+                    let response = DataLoadResponse(request.id, request.dataId, success: true, data: result)
+                    print(response.description)
+                    return response
                 }
                 catch
                 {
-                    return DataLoadResponse(request.id, request.dataId, success: false, data: nil)
+                    let response = DataLoadResponse(request.id, request.dataId, success: false, data: nil)
+                    print(response.description)
+                    return response
                 }
 
             case let request as DataSaveRequest:
                 do
                 {
                     try self.dataDatabase.save(identifier: request.dataId, type: request.type, data: request.data)
-                    return DataSaveResponse(request.id, request.dataId, success: true)
+                    let response = DataSaveResponse(request.id, request.dataId, success: true)
+                    print(response.description)
+                    return response
                 }
                 catch
                 {
-                    return DataSaveResponse(request.id, request.dataId, success: false)
+                    let response = DataSaveResponse(request.id, request.dataId, success: false)
+                    print(response.description)
+                    return response
                 }
 
             case let request as RelationshipQueryRequest:
                 let results = self.relationshipDatabase.query(subject: request.subject, relation: request.relation, object: request.object)
-                return RelationshipQueryResponse(request.id, results)
+                let response = RelationshipQueryResponse(request.id, results)
+                print(response.description)
+                return response
+
 
             case let request as RelationshipRemoveRequest:
                 do
                 {
                     try self.relationshipDatabase.remove(relationship: request.relationship)
-                    return RelationshipRemoveResponse(effect.id, true)
+                    let response = RelationshipRemoveResponse(effect.id, true)
+                    print(response.description)
+                    return response
+
                 }
                 catch
                 {
-                    return RelationshipRemoveResponse(effect.id, false)
+                    let response = RelationshipRemoveResponse(effect.id, false)
+                    print(response.description)
+                    return response
+
                 }
 
             case let request as RelationshipSaveRequest:
                 do
                 {
                     try self.relationshipDatabase.save(relationship: request.relationship)
-                    return RelationshipRemoveResponse(effect.id, true)
+                    let response = RelationshipRemoveResponse(effect.id, true)
+                    print(response.description)
+                    return response
+
                 }
                 catch
                 {
-                    return RelationshipRemoveResponse(effect.id, false)
+                    let response = RelationshipRemoveResponse(effect.id, false)
+                    print(response.description)
+                    return response
+
                 }
 
             default:
-                return Failure(effect.id)
+                let response = Failure(effect.id)
+                print(response.description)
+                return response
+
         }
     }
 }
