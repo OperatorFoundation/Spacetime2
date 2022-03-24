@@ -53,6 +53,7 @@ public class Simulation
 
                     if let response = module.handleEffect(effect, self.events)
                     {
+                        print(response)
                         events.enqueue(element: response)
                     }
 
@@ -73,6 +74,7 @@ public class Simulation
                 {
                     if let response = module.handleEffect(effect, self.events)
                     {
+                        print(response)
                         events.enqueue(element: response)
                     }
 
@@ -86,6 +88,7 @@ public class Simulation
             }
 
             let response = Failure(effect.id)
+            print(response)
             events.enqueue(element: response)
             continue
         }
