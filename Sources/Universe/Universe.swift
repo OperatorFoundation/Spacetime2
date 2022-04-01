@@ -49,7 +49,7 @@ open class Universe
         return result
     }
 
-    public func processEvent(_ event: Event)
+    open func processEvent(_ event: Event)
     {
         return
     }
