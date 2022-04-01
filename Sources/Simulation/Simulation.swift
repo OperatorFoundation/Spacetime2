@@ -32,11 +32,11 @@ public class Simulation
 
         self.queue.async
         {
-            self.handleEvents()
+            self.handleEffects()
         }
     }
 
-    func handleEvents()
+    func handleEffects()
     {
         while true
         {

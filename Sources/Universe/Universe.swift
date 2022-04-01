@@ -49,26 +49,32 @@ open class Universe
         return result
     }
 
+    public func processEvent(_ event: Event)
+    {
+        return
+    }
+
     func distributeEvents()
     {
         while true
         {
             let event = self.events.dequeue()
-            guard let id = event.effectId else
+            if let id = event.effectId
             {
-                print("Event without an id \(event)")
-                continue
-            }
+                guard let channel = self.channels[id] else
+                {
+                    print("Unknown channel id \(id)")
+                    continue
+                }
 
-            guard let channel = self.channels[id] else
+                channel.enqueue(element: event)
+
+                self.channels.removeValue(forKey: id)
+            }
+            else
             {
-                print("Unknown channel id \(id)")
-                continue
+                self.processEvent(event)
             }
-
-            channel.enqueue(element: event)
-
-            self.channels.removeValue(forKey: id)
         }
     }
 }
