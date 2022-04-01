@@ -30,4 +30,9 @@ public class RandomModule: Module
                 return Failure(effect.id)
         }
     }
+
+    public func handleExternalEvent(_ event: Event)
+    {
+        return
+    }
 }

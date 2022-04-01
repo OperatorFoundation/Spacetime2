@@ -13,4 +13,5 @@ public protocol Module
 {
     func name() -> String
     func handleEffect(_ effect: Effect, _ channel: BlockingQueue<Event>) -> Event?
+    func handleExternalEvent(_ event: Event)
 }

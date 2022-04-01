@@ -82,6 +82,11 @@ public class NetworkConnectModule: Module
         }
     }
 
+    public func handleExternalEvent(_ event: Event)
+    {
+        return
+    }
+
     func connect(host: String, port: Int, type: ConnectionType) -> UUID?
     {
         let uuid = UUID()

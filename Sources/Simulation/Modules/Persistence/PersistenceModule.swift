@@ -109,4 +109,9 @@ public class PersistenceModule: Module
 
         }
     }
+
+    public func handleExternalEvent(_ event: Event)
+    {
+        return
+    }
 }

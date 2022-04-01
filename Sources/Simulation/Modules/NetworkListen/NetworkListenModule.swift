@@ -86,6 +86,11 @@ public class NetworkListenModule: Module
         }
     }
 
+    public func handleExternalEvent(_ event: Event)
+    {
+        return
+    }
+
     func listen(port: Int) -> UUID?
     {
         let uuid = UUID()
