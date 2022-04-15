@@ -42,6 +42,8 @@ open class Universe
         let channel = BlockingQueue<Event>()
         self.channels[effect.id] = channel
 
+        print("added \(effect.id) to a blocking queue")
+        
         self.effects.enqueue(element: effect)
 
         let result = channel.dequeue()
@@ -61,18 +63,21 @@ open class Universe
             let event = self.events.dequeue()
             if let id = event.effectId
             {
+                print("found an event with id: \(id)")
                 guard let channel = self.channels[id] else
                 {
                     print("Unknown channel id \(id)")
                     continue
                 }
 
+                print("enqueueing an event")
                 channel.enqueue(element: event)
 
                 self.channels.removeValue(forKey: id)
             }
             else
             {
+                print("distributeEvents found an event without an id.  calling processEvent()")
                 self.processEvent(event)
             }
         }
