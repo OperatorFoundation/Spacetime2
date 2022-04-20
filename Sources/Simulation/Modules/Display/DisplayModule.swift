@@ -25,6 +25,7 @@ public class DisplayModule: Module
             case let display as Display:
                 print(display.string)
                 return Affected(effect.id)
+                
             default:
                 return Failure(effect.id)
         }
