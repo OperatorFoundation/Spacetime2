@@ -12,7 +12,7 @@ open class Effect: CustomStringConvertible
     public let id: UUID = UUID()
     public let module: String
 
-    public var description: String
+    open var description: String
     {
         return "Effect(\(type(of: self)))[id: \(self.id)]"
     }

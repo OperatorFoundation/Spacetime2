@@ -13,7 +13,7 @@ open class Event: CustomStringConvertible
     public let effectId: UUID?
     public let module: String
 
-    public var description: String
+    open var description: String
     {
         return "\(self.module).Event(\(type(of: self)))[effectId: \(String(describing: self.effectId))]"
     }
