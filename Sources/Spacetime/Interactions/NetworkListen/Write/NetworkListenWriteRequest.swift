@@ -14,6 +14,11 @@ public class NetworkListenWriteRequest: Effect
     public let data: Data
     public let lengthPrefixSizeInBits: Int?
 
+    public override var description: String
+    {
+        return "\(self.module).NetworkListenWriteRequest[id: \(self.id), socketId: \(self.socketId), data: \(self.data), lengthPrefixSizeInBits: \(String(describing: self.lengthPrefixSizeInBits))]"
+    }
+
     public init(_ socketId: UUID, _ data: Data, _ lengthPrefixSizeInBits: Int? = nil)
     {
         self.socketId = socketId

@@ -11,6 +11,11 @@ public class RelationshipRemoveRequest: Effect
 {
     public let relationship: Relationship
 
+    public override var description: String
+    {
+        return "\(self.module).RelationshipRemoveRequest[id: \(self.id), relationship: \(self.relationship)]"
+    }
+
     public init(_ relationship: Relationship)
     {
         self.relationship = relationship

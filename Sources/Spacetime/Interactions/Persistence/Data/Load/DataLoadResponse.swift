@@ -13,6 +13,11 @@ public class DataLoadResponse: Event
     public let success: Bool
     public let data: Data?
 
+    public override var description: String
+    {
+        return "\(self.module).DataDeleteResponse[effectID: \(String(describing: self.effectId)), dataId: \(self.dataId), success: \(self.success), data: \(self.data)]"
+    }
+
     public init(_ effectId: UUID, _ dataId: UInt64, success: Bool, data: Data?)
     {
         self.dataId = dataId

@@ -13,6 +13,11 @@ public class RelationshipQueryRequest: Effect
     public let relation: Relation?
     public let object: UInt64?
 
+    public override var description: String
+    {
+        return "\(self.module).RelationshipQueryRequest[id: \(self.id), subject: \(String(describing: self.subject)), relation: \(String(describing: self.relation)), object: \(String(describing: self.object))]"
+    }
+
     public init(subject: UInt64?, relation: Relation?, object: UInt64?)
     {
         self.subject = subject

@@ -12,6 +12,11 @@ public class NetworkListenReadResponse: Event
     public let socketId: UUID
     public let data: Data
 
+    public override var description: String
+    {
+        return "\(self.module).NetworkListenReadResponse[effectID: \(String(describing: self.effectId)), socketId: \(self.socketId), data: \(self.data)]"
+    }
+
     public init(_ effectId: UUID, _ socketId: UUID, _ data: Data)
     {
         self.socketId = socketId

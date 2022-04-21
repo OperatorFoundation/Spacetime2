@@ -11,6 +11,11 @@ public class RandomResponse: Event
 {
     public let value: UInt64
 
+    public override var description: String
+    {
+        return "\(self.module).RandomResponse[effectId: \(String(describing: self.effectId)), value: \(value)]"
+    }
+
     public init(_ effectId: UUID, _ value: UInt64)
     {
         self.value = value

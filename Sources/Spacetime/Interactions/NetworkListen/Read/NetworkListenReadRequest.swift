@@ -12,6 +12,11 @@ public class NetworkListenReadRequest: Effect
     public let socketId: UUID
     public let style: NetworkListenReadStyle
 
+    public override var description: String
+    {
+        return "\(self.module).NetworkListenReadRequest[id: \(self.id), socketId: \(self.socketId), style: \(self.style)]"
+    }
+
     public init(_ socketId: UUID, _ style: NetworkListenReadStyle)
     {
         self.socketId = socketId

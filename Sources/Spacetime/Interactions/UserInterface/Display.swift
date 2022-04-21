@@ -11,6 +11,11 @@ public class Display: Effect
 {
     public let string: String
 
+    public override var description: String
+    {
+        return "\(self.module).Display[id: \(self.id) string: \(self.string)]"
+    }
+
     public init(_ string: String)
     {
         self.string = string

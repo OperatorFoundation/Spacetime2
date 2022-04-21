@@ -11,6 +11,11 @@ public class RelationshipRemoveResponse: Event
 {
     public let success: Bool
 
+    public override var description: String
+    {
+        return "\(self.module).RelationshipRemoveResponse[effectID: \(String(describing: self.effectId)), success: \(self.success)]"
+    }
+
     public init(_ effectId: UUID, _ success: Bool)
     {
         self.success = success

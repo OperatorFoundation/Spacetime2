@@ -12,6 +12,11 @@ public class NetworkConnectReadRequest: Effect
     public let socketId: UUID
     public let style: NetworkConnectReadStyle
 
+    public override var description: String
+    {
+        return "\(self.module).NetworkConnectReadRequest[id: \(self.id), socketId: \(self.socketId), style: \(self.style)]"
+    }
+
     public init(_ socketId: UUID, _ style: NetworkConnectReadStyle)
     {
         self.socketId = socketId

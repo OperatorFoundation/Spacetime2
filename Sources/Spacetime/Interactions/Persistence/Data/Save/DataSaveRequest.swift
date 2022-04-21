@@ -13,6 +13,11 @@ public class DataSaveRequest: Effect
     public let type: String
     public let data: Data
 
+    public override var description: String
+    {
+        return "\(self.module).DataSaveRequest[id: \(self.id), dataId: \(self.dataId), type: \(self.type), data: \(self.data)]"
+    }
+
     public init(dataId: UInt64, type: String, data: Data)
     {
         self.dataId = dataId

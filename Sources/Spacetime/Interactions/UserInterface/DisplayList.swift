@@ -11,6 +11,11 @@ public class DisplayList: Effect
 {
     public let list: [String]
 
+    public override var description: String
+    {
+        return "\(self.module).DisplayList[id: \(self.id) list: \(self.list)]"
+    }
+
     public init(_ list: [String])
     {
         self.list = list

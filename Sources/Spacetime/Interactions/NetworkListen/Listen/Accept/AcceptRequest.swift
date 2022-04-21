@@ -11,6 +11,11 @@ public class AcceptRequest: Effect
 {
     public let socketId: UUID
 
+    public override var description: String
+    {
+        return "\(self.module).AcceptRequest[id: \(self.id), socketId: \(self.socketId)]"
+    }
+
     public init(_ socketId: UUID)
     {
         self.socketId = socketId

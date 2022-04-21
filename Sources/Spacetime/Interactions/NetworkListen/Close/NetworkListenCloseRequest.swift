@@ -11,6 +11,11 @@ public class NetworkListenCloseRequest: Effect
 {
     public let socketId: UUID
 
+    public override var description: String
+    {
+        return "\(self.module).NetworkListenCloseRequest[id: \(self.id), socketId: \(self.socketId)]"
+    }
+
     public init(_ socketId: UUID)
     {
         self.socketId = socketId

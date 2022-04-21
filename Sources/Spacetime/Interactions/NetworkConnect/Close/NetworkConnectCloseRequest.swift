@@ -11,6 +11,11 @@ public class NetworkConnectCloseRequest: Effect
 {
     public let socketId: UUID
 
+    public override var description: String
+    {
+        return "\(self.module).NetworkConnectCloseRequest[id: \(self.id), socketId: \(self.socketId)]"
+    }
+
     public init(_ socketId: UUID)
     {
         self.socketId = socketId

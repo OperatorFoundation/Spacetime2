@@ -9,6 +9,11 @@ import Foundation
 
 public class Affected: Event
 {
+    public override var description: String
+    {
+        return "\(self.module).Affected[effectID: \(String(describing: self.effectId))]"
+    }
+
     public init(_ effectId: UUID)
     {
         super.init(effectId, module: BuiltinModuleNames.general.rawValue)
