@@ -5,7 +5,8 @@ import PackageDescription
 
 let package = Package(
     name: "Spacetime",
-    platforms: [.macOS(.v12)],
+    platforms: [.macOS(.v12),
+                .iOS(.v15)],
     products: [
         // Products define the executables and libraries a package produces, and make them visible to other packages.
         .library(
@@ -23,7 +24,6 @@ let package = Package(
         // .package(url: /* package url */, from: "1.0.0"),
         .package(url: "https://github.com/OperatorFoundation/Chord", branch: "main"),
         .package(url: "https://github.com/OperatorFoundation/Datable", branch: "main"),
-        .package(url: "https://github.com/OperatorFoundation/Gardener", branch: "main"),
         .package(url: "https://github.com/OperatorFoundation/SwiftHexTools", branch: "main"),
         .package(url: "https://github.com/OperatorFoundation/SwiftQueue", branch: "main"),
         .package(url: "https://github.com/OperatorFoundation/Transmission", branch: "main"),
@@ -51,7 +51,6 @@ let package = Package(
             name: "Simulation",
             dependencies: [
                 "Chord",
-                "Gardener",
                 "Spacetime",
                 "SwiftQueue",
                 "Transmission"
