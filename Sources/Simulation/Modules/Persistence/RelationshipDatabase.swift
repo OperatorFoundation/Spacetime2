@@ -7,7 +7,6 @@
 
 import Datable
 import Foundation
-import Gardener
 import Spacetime
 
 public class RelationshipDatabase
@@ -21,15 +20,29 @@ public class RelationshipDatabase
     {
         self.root = root
         self.path = "\(self.root)/relationships"
-
-        if !File.exists(self.root)
+        
+        if !FileManager.default.fileExists(atPath: self.root)
         {
-            let _ = File.makeDirectory(atPath: self.root)
+            do
+            {
+                try FileManager.default.createDirectory(atPath: self.root, withIntermediateDirectories: true)
+            }
+            catch let dirError
+            {
+                print("Failed to create a directory at \(self.root). Error: \(dirError)")
+            }
         }
 
-        if !File.exists(self.path)
+        if !FileManager.default.fileExists(atPath: self.path)
         {
-            let _ = File.makeDirectory(atPath: self.path)
+            do
+            {
+                try FileManager.default.createDirectory(atPath: self.path, withIntermediateDirectories: true)
+            }
+            catch let dirError
+            {
+                print("Failed to create a directory at \(self.path). Error: \(dirError)")
+            }
         }
     }
 
