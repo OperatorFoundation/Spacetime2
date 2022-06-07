@@ -10,7 +10,7 @@ import Foundation
 import Spacetime
 import TransmissionTypes
 
-public class Listener
+open class Listener
 {
     public let universe: Universe
     public let uuid: UUID
@@ -36,7 +36,7 @@ public class Listener
         self.uuid = uuid
     }
 
-    public func accept() -> TransmissionTypes.Connection?
+    open func accept() -> TransmissionTypes.Connection?
     {
         let result = self.universe.processEffect(AcceptRequest(self.uuid))
         switch result
@@ -48,7 +48,7 @@ public class Listener
         }
     }
 
-    public func close()
+    open func close()
     {
         let result = self.universe.processEffect(NetworkListenCloseRequest(self.uuid))
         switch result
