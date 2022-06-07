@@ -15,7 +15,28 @@ public class DataLoadResponse: Event
 
     public override var description: String
     {
-        return "\(self.module).DataDeleteResponse[effectID: \(String(describing: self.effectId)), dataId: \(self.dataId), success: \(self.success), data: \(self.data)]"
+        if let effectId = self.effectId
+        {
+            if let data = self.data
+            {
+                return "\(self.module).DataLoadResponse[effectID: \(effectId), dataId: \(self.dataId), success: \(self.success), data: \(data)]"
+            }
+            else
+            {
+                return "\(self.module).DataLoadResponse[effectID: \(effectId), dataId: \(self.dataId), success: \(self.success), data: nil]"
+            }
+        }
+        else
+        {
+            if let data = self.data
+            {
+                return "\(self.module).DataLoadResponse[effectID: nil, dataId: \(self.dataId), success: \(self.success), data: \(data)]"
+            }
+            else
+            {
+                return "\(self.module).DataLoadResponse[effectID: nil, dataId: \(self.dataId), success: \(self.success), data: nil]"
+            }
+        }
     }
 
     public init(_ effectId: UUID, _ dataId: UInt64, success: Bool, data: Data?)
