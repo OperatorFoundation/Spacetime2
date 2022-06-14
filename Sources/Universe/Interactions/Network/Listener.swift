@@ -10,7 +10,7 @@ import Foundation
 import Spacetime
 import TransmissionTypes
 
-open class Listener
+open class Listener: TransmissionTypes.Listener
 {
     public let universe: Universe
     public let uuid: UUID
@@ -36,7 +36,7 @@ open class Listener
         self.uuid = uuid
     }
 
-    open func accept() -> TransmissionTypes.Connection?
+    open func accept() throws -> TransmissionTypes.Connection
     {
         let result = self.universe.processEffect(AcceptRequest(self.uuid))
         switch result
@@ -44,7 +44,7 @@ open class Listener
             case let response as AcceptResponse:
                 return ListenConnection(universe: self.universe, response.socketId)
             default:
-                return nil
+                throw ListenerError.acceptFailed
         }
     }
 
@@ -73,4 +73,5 @@ public enum ListenerError: Error
 {
     case portInUse(Int) // port
     case badResponse(Event)
+    case acceptFailed
 }

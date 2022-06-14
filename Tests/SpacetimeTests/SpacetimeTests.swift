@@ -136,21 +136,26 @@ final class SpacetimeTests: XCTestCase {
         public override func main() throws
         {
             let listener = try listen("127.0.0.1", 1234)
-            guard let connection = listener.accept() else
-            {
-                XCTFail()
-                return
-            }
 
-            guard let r = self.random() else
+            do
+            {
+                let connection = try listener.accept()
+
+                guard let r = self.random() else
+                {
+                    XCTFail()
+                    return
+                }
+                let _ = connection.write(data: r.data)
+                guard let result = connection.read(size: 4) else {return}
+                display(result.string)
+                display("done")
+            }
+            catch
             {
                 XCTFail()
                 return
             }
-            let _ = connection.write(data: r.data)
-            guard let result = connection.read(size: 4) else {return}
-            display(result.string)
-            display("done")
         }
     }
 }
