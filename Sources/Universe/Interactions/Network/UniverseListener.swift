@@ -10,7 +10,7 @@ import Foundation
 import Spacetime
 import TransmissionTypes
 
-open class Listener: TransmissionTypes.Listener
+open class UniverseListener: TransmissionTypes.Listener
 {
     public let universe: Universe
     public let uuid: UUID
@@ -63,9 +63,9 @@ open class Listener: TransmissionTypes.Listener
 
 extension Universe
 {
-    public func listen(_ address: String, _ port: Int) throws -> Listener
+    public func listen(_ address: String, _ port: Int) throws -> UniverseListener
     {
-        return try Listener(universe: self, address: address, port: port)
+        return try UniverseListener(universe: self, address: address, port: port)
     }
 }
 
