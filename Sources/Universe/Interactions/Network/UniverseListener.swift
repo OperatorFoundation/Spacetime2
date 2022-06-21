@@ -15,13 +15,14 @@ open class UniverseListener: TransmissionTypes.Listener
     public let universe: Universe
     public let uuid: UUID
 
-    public convenience init(universe: Universe, address: String, port: Int) throws
+    public init(universe: Universe, address: String, port: Int) throws
     {
         let result = universe.processEffect(ListenRequest(address, port))
         switch result
         {
             case let response as ListenResponse:
-                self.init(universe: universe, uuid: response.socketId)
+                self.universe = universe
+                self.uuid = response.socketId
                 return
             case is Failure:
                 throw ListenerError.badResponse(result)
