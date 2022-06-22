@@ -64,9 +64,9 @@ open class UniverseListener: TransmissionTypes.Listener
 
 extension Universe
 {
-    public func listen(_ address: String, _ port: Int) throws -> UniverseListener
+    public func listen(_ address: String, _ port: Int, type: ConnectionType = .tcp) throws -> UniverseListener
     {
-        return try UniverseListener(universe: self, address: address, port: port)
+        return try UniverseListener(universe: self, address: address, port: port, type: type)
     }
 }
 
