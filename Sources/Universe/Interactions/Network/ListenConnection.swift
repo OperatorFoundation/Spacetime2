@@ -81,9 +81,10 @@ public class ListenConnection: TransmissionTypes.Connection
         let result = self.universe.processEffect(NetworkListenWriteRequest(self.uuid, data, prefixSizeInBits))
         switch result
         {
-            case is Affected:
+            case is NetworkListenWriteResponse:
                 return true
             default:
+                print("bad write \(result)")
                 return false
         }
     }

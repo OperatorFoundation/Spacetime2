@@ -41,7 +41,15 @@ public class Simulation
         while true
         {
             let effect = effects.dequeue()
-            print(effect.description)
+
+            switch effect
+            {
+                case is DisplayText:
+                    skip()
+
+                default:
+                    print(effect.description)
+            }
 
             var handled = false
 
@@ -53,7 +61,15 @@ public class Simulation
 
                     if let response = module.handleEffect(effect, self.events)
                     {
-                        print(response.description)
+                        switch response
+                        {
+                            case is Affected:
+                                skip()
+
+                            default:
+                                print(response.description)
+                        }
+
                         events.enqueue(element: response)
                     }
 
@@ -92,5 +108,10 @@ public class Simulation
             events.enqueue(element: response)
             continue
         }
+    }
+
+    func skip()
+    {
+        return
     }
 }

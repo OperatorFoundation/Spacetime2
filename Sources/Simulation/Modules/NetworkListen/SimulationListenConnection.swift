@@ -136,7 +136,7 @@ fileprivate struct Write
                     return
                 }
 
-                let response = Affected(request.id)
+                let response = NetworkListenWriteResponse(request.id)
                 print(response.description)
                 events.enqueue(element: response)
             }
@@ -149,7 +149,7 @@ fileprivate struct Write
                     return
                 }
 
-                let response = Affected(request.id)
+                let response = NetworkListenWriteResponse(request.id)
                 print(response.description)
                 events.enqueue(element: response)
             }
