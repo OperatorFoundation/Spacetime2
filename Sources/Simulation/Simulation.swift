@@ -44,7 +44,7 @@ public class Simulation
 
             switch effect
             {
-                case is DisplayText:
+                case is Display:
                     skip()
 
                 default:
