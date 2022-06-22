@@ -83,6 +83,8 @@ public class ListenConnection: TransmissionTypes.Connection
         {
             case is NetworkListenWriteResponse:
                 return true
+            case is Affected:
+                return true
             default:
                 print("bad write \(result)")
                 return false
