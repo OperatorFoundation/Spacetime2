@@ -87,6 +87,7 @@ public class ListenConnection: TransmissionTypes.Connection
                 return true
             default:
                 print("bad write \(result)")
+                print("bad write type \(type(of: result))")
                 return false
         }
     }
