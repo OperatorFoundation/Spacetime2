@@ -16,13 +16,14 @@ public class ConnectConnection: TransmissionTypes.Connection
     public let universe: Universe
     public let uuid: UUID
 
-    public convenience init?(universe: Universe, address: String, port: Int, type: ConnectionType = .tcp)
+    public init?(universe: Universe, address: String, port: Int, type: ConnectionType = .tcp)
     {
         let result = universe.processEffect(ConnectRequest(address, port, type))
         switch result
         {
             case let response as ConnectResponse:
-                self.init(universe: universe, response.socketId)
+                self.universe = universe
+                self.uuid = response.socketId
                 return
             case is Failure:
                 return nil

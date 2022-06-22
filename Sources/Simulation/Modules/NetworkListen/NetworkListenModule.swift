@@ -37,7 +37,7 @@ public class NetworkListenModule: Module
                 return nil
 
             case let request as ListenRequest:
-                guard let uuid = listen(port: request.port) else
+                guard let uuid = listen(port: request.port, type: request.type) else
                 {
                     return Failure(effect.id)
                 }
@@ -91,10 +91,10 @@ public class NetworkListenModule: Module
         return
     }
 
-    func listen(port: Int) -> UUID?
+    func listen(port: Int, type: ConnectionType) -> UUID?
     {
         let uuid = UUID()
-        guard let networkListener = TransmissionListener(port: port, logger: nil) else
+        guard let networkListener = TransmissionListener(port: port, type: type, logger: nil) else
         {
             return nil
         }

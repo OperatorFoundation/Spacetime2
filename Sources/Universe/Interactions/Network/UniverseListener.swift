@@ -15,9 +15,9 @@ open class UniverseListener: TransmissionTypes.Listener
     public let universe: Universe
     public let uuid: UUID
 
-    public init(universe: Universe, address: String, port: Int) throws
+    public init(universe: Universe, address: String, port: Int, type: ConnectionType = .tcp) throws
     {
-        let result = universe.processEffect(ListenRequest(address, port))
+        let result = universe.processEffect(ListenRequest(address, port, type))
         switch result
         {
             case let response as ListenResponse:
