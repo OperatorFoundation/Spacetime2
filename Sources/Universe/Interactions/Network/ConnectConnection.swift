@@ -105,6 +105,8 @@ public class ConnectConnection: TransmissionTypes.Connection
     }
 }
 
+// add destinationHost() function that gets the host name
+
 extension Universe
 {
     public func connect(_ address: String, _ port: Int, _ type: ConnectionType = .tcp) throws -> Connection
