@@ -16,4 +16,5 @@ public enum BuiltinModuleNames: String
     case persistence
     case general
     case time
+    case starburst
 }
