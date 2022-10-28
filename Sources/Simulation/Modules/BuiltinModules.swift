@@ -9,6 +9,7 @@ import Foundation
 
 public class BuiltinModules
 {
+    #if os(macOS)
     static public let modules: [String: Module] = [
         DisplayModule.name: DisplayModule(),
         PersistenceModule.name: PersistenceModule(),
@@ -16,4 +17,12 @@ public class BuiltinModules
         NetworkListenModule.name: NetworkListenModule(),
         NetworkConnectModule.name: NetworkConnectModule(),
     ]
+    #else
+    static public let modules: [String: Module] = [
+        DisplayModule.name: DisplayModule(),
+        RandomModule.name: RandomModule(),
+        NetworkListenModule.name: NetworkListenModule(),
+        NetworkConnectModule.name: NetworkConnectModule(),
+    ]
+    #endif
 }
