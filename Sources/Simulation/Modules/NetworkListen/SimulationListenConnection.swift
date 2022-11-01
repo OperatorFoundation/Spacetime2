@@ -183,7 +183,7 @@ fileprivate struct Close
         {
             networkConnection.close()
 
-            let response = Affected(request.id)
+            let response = NetworkListenCloseResponse(request.id, uuid)
             print(response.description)
             events.enqueue(element: response)
 

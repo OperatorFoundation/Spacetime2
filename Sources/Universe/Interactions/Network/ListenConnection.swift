@@ -57,7 +57,7 @@ public class ListenConnection: TransmissionTypes.Connection
         let result = self.universe.processEffect(NetworkListenCloseRequest(self.uuid))
         switch result
         {
-            case is Affected:
+            case is NetworkListenCloseResponse:
                 return
             default:
                 return

@@ -15,6 +15,7 @@ open class Universe
     let effects: BlockingQueue<Effect>
     let events: BlockingQueue<Event>
     var channels: [UUID: BlockingQueue<Event>] = [:]
+    var database: CodableDatabase? = nil
 
     public init(effects: BlockingQueue<Effect>, events: BlockingQueue<Event>)
     {

@@ -89,6 +89,58 @@ public class CodableDatabase
     }
 }
 
+extension Universe
+{
+    public func save<T>(identifier: UInt64, codable: T) throws where T: Codable
+    {
+        let db: CodableDatabase
+        if let database = self.database
+        {
+            db = database
+        }
+        else
+        {
+            db = CodableDatabase(self)
+            self.database = db
+        }
+
+        try db.save(identifier: identifier, codable: codable)
+    }
+
+    public func load<T>(identifier: UInt64) throws -> T where T: Codable
+    {
+        let db: CodableDatabase
+        if let database = self.database
+        {
+            db = database
+        }
+        else
+        {
+            db = CodableDatabase(self)
+            self.database = db
+        }
+
+        return try db.load(identifier: identifier)
+    }
+
+    public func delete(identifier: UInt64) throws
+    {
+        let db: CodableDatabase
+        if let database = self.database
+        {
+            db = database
+        }
+        else
+        {
+            db = CodableDatabase(self)
+            self.database = db
+        }
+
+        return try db.delete(identifier: identifier)
+    }
+}
+
+
 public enum CodableDatabaseError: Error
 {
     case failure

@@ -100,7 +100,7 @@ fileprivate struct Close
         {
             networkListener.close()
 
-            let response = Affected(request.id)
+            let response = NetworkListenCloseResponse(request.id, uuid)
             events.enqueue(element: response)
 
             state.listeners.removeValue(forKey: uuid)
