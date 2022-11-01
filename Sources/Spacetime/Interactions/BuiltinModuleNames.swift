@@ -15,4 +15,6 @@ public enum BuiltinModuleNames: String
     case random
     case persistence
     case general
+    case time
+    case starburst
 }
