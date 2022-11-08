@@ -6,7 +6,9 @@
 //
 
 import Foundation
+#if os(macOS) || os(iOS)
 import os.log
+#endif
 
 import Chord
 import Spacetime
