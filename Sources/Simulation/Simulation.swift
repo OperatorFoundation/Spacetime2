@@ -33,7 +33,11 @@ public class Simulation
         }
         else
         {
+            #if os(macOS) || os(iOS)
             self.logger = Logger(subsystem: "org.OperatorFoundation.SpacetimeLogger", category: "Simulation")
+            #else
+            self.logger = Logger(label: "org.OperatorFoundation.SpacetimeLogger")
+            #endif
         }
         
         self.capabilities = capabilities
@@ -106,9 +110,17 @@ public class Simulation
                 {
                     if let response = module.handleEffect(effect, self.events)
                     {
+                        #if os(macOS) || os(iOS)
                         logger.log("🪐 Spacetime: Simulation handleEffects() enqueing event: \(response.description, privacy: .public)")
+                        #else
+                        logger.debug("🪐 Spacetime: Simulation handleEffects() enqueing event: \(response.description)")
+                        #endif
                         events.enqueue(element: response)
+                        #if os(macOS) || os(iOS)
                         logger.log("🪐 Spacetime: Simulation handleEffects() enqued event: \(response.description, privacy: .public) ")
+                        #else
+                        logger.debug("🪐 Spacetime: Simulation handleEffects() enqued event: \(response.description) ")
+                        #endif
                     }
 
                     break
