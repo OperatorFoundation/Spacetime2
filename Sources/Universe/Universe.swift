@@ -35,7 +35,11 @@ open class Universe
         }
         else
         {
+            #if os(macOS) || os(iOS)
             self.logger = Logger(subsystem: "org.OperatorFoundation.SpacetimeLogger", category: "Universe")
+            #else
+            self.logger = Logger(label: "org.OperatorFoundation.SpacetimeLogger")
+            #endif
         }
 
         let queue = DispatchQueue(label: "distributeEvents")
@@ -74,6 +78,7 @@ open class Universe
     func distributeEvents()
     {
         logger.log("🪐 Spacetime.Universe: distributeEvents called, beginning loop...")
+
         while true
         {
             let event = self.events.dequeue()
