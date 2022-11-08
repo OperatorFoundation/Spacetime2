@@ -5,21 +5,33 @@
 //  Created by Dr. Brandon Wiley on 2/3/22.
 //
 
-import Chord
 import Foundation
+import os.log
+
+import Chord
 import Spacetime
 import Transmission
 
 public class Simulation
 {
+    let logger: Logger
     let capabilities: Capabilities
     public let effects: BlockingQueue<Effect> = BlockingQueue<Effect>(name: "Spacetime.effects")
     public let events: BlockingQueue<Event> = BlockingQueue<Event>(name: "Spacetime.events")
     let queue = DispatchQueue(label: "Simulation.handleEvents")
     var userModules: [String: Module] = [:]
 
-    public init(capabilities: Capabilities, userModules: [Module]? = nil)
+    public init(capabilities: Capabilities, userModules: [Module]? = nil, logger: Logger? = nil)
     {
+        if let newLog = logger
+        {
+            self.logger = newLog
+        }
+        else
+        {
+            self.logger = Logger(subsystem: "org.OperatorFoundation.SpacetimeLogger", category: "Simulation")
+        }
+        
         self.capabilities = capabilities
 
         if let userModules = userModules
@@ -40,7 +52,7 @@ public class Simulation
     {
         while true
         {
-            let effect = effects.dequeue()
+            let effect = self.effects.dequeue()
 
             switch effect
             {
@@ -90,8 +102,9 @@ public class Simulation
                 {
                     if let response = module.handleEffect(effect, self.events)
                     {
-                        print(response.description)
+                        logger.log("🪐 Spacetime: Simulation handleEffects() enqueing \(response.description) response.")
                         events.enqueue(element: response)
+                        logger.log("🪐 Spacetime: Simulation handleEffects() \(response.description) enqued")
                     }
 
                     break
