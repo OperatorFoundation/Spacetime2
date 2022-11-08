@@ -102,9 +102,9 @@ public class Simulation
                 {
                     if let response = module.handleEffect(effect, self.events)
                     {
-                        logger.log("🪐 Spacetime: Simulation handleEffects() enqueing \(response.description) response.")
+                        logger.log("🪐 Spacetime: Simulation handleEffects() enqueing event: \(response.description, privacy: .public)")
                         events.enqueue(element: response)
-                        logger.log("🪐 Spacetime: Simulation handleEffects() \(response.description) enqued")
+                        logger.log("🪐 Spacetime: Simulation handleEffects() enqued event: \(response.description, privacy: .public) ")
                     }
 
                     break

@@ -72,13 +72,14 @@ open class Universe
         logger.log("🪐 Spacetime.Universe: distributeEvents called, beginning loop...")
         while true
         {
-            logger.log("🪐 Spacetime.Universe: distributeEvents dequeing an event...")
             let event = self.events.dequeue()
             
-            logger.log("🪐 Spacetime.Universe: distributeEvents dequed \(event)")
+            logger.log("🪐 Spacetime.Universe: distributeEvents dequed \(event.description, privacy: .public)")
             
             if let id = event.effectId
             {
+                logger.log("🪐 Spacetime.Universe: distributeEvents adding event to channel queue \(event.description, privacy: .public)")
+                
                 guard let channel = self.channels[id] else
                 {
                     logger.log("🪐 Spacetime.Universe: Unknown channel id \(id)")
@@ -91,8 +92,12 @@ open class Universe
             }
             else
             {
+                logger.log("🪐 Spacetime.Universe: distributeEvents calling process(event) \(event.description, privacy: .public)")
                 self.processEvent(event)
+                logger.log("🪐 Spacetime.Universe: distributeEvents finished calling process(event) \(event.description, privacy: .public)")
             }
+            
+            logger.log("🪐 Spacetime.Universe: distributeEvents finished handling \(event.description, privacy: .public)")
         }
     }
 }
