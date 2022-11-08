@@ -77,7 +77,11 @@ open class Universe
 
     func distributeEvents()
     {
+        #if os(macOS) || os(iOS)
         logger.log("🪐 Spacetime.Universe: distributeEvents called, beginning loop...")
+        #else
+        logger.debug("🪐 Spacetime.Universe: distributeEvents called, beginning loop...")
+        #endif
 
         while true
         {
@@ -88,7 +92,6 @@ open class Universe
             #else
             logger.debug("🪐 Spacetime.Universe: distributeEvents dequed \(event.description)")
             #endif
-
             
             if let id = event.effectId
             {
