@@ -142,11 +142,18 @@ public class Simulation
     }
 }
 
-func logAThing(logger: Logger, logMessage: String)
+func logAThing(logger: Logger?, logMessage: String)
 {
-    #if os(macOS) || os(iOS)
-    logger.log("🪐 \(logMessage, privacy: .public)")
-    #else
-    logger.debug("🪐 \(logMessage)")
-    #endif
+    if let aLog = logger
+    {
+        #if os(macOS) || os(iOS)
+        aLog.log("🪐 \(logMessage, privacy: .public)")
+        #else
+        aLog.debug("🪐 \(logMessage)")
+        #endif
+    }
+    else
+    {
+        print(logMessage)
+    }
 }

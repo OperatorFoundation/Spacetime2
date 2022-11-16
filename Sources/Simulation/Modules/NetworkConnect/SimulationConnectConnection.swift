@@ -76,6 +76,7 @@ fileprivate struct Read
             switch request.style
             {
                 case .exactSize(let size):
+                    logAThing(logger: logger, logMessage: "📖 SimulationConnectConnection.Read: case .exactSize(\(size)")
                     guard let result = networkConnection.read(size: size) else
                     {
                         let failure = Failure(request.id)
@@ -85,16 +86,11 @@ fileprivate struct Read
                     }
 
                     let response = NetworkConnectReadResponse(request.id, request.socketId, result)
-                    
-                    if logger != nil
-                    {
-                        logAThing(logger: logger!, logMessage: "SimulationConnectConnection: \(response.description)")
-                    }
-                    
-                    print(response.description)
-                    
+                    logAThing(logger: logger!, logMessage: "SimulationConnectConnection: \(response.description)")
                     events.enqueue(element: response)
+                    
                 case .maxSize(let size):
+                    logAThing(logger: logger, logMessage: "📖 SimulationConnectConnection.Read: case .maxSize(\(size)")
                     guard let result = networkConnection.read(maxSize: size) else
                     {
                         let failure = Failure(request.id)
@@ -106,15 +102,22 @@ fileprivate struct Read
                     let response = NetworkConnectReadResponse(request.id, request.socketId, result)
                     print(response.description)
                     events.enqueue(element: response)
+                    
                 case .lengthPrefixSizeInBits(let prefixSize):
+                    logAThing(logger: logger, logMessage: "📖 SimulationConnectConnection.Read: case .lengthPrefixSizeInBits(\(prefixSize)")
                     guard let result = networkConnection.readWithLengthPrefix(prefixSizeInBits: prefixSize) else
                     {
                         let failure = Failure(request.id)
-                        print(failure.description)
+                        logAThing(logger: logger, logMessage: "🛑 SimulationConnectConnection.Read: case .lengthPrefixSizeInBits failed: \(failure.description)")
                         events.enqueue(element: failure)
                         return
                     }
-
+                    
+                    if result.isEmpty
+                    {
+                        logAThing(logger: logger, logMessage: "🛑 SimulationConnectConnection.Read: case .lengthPrefixSizeInBits returned an empty data.")
+                    }
+                    
                     let response = NetworkConnectReadResponse(request.id, request.socketId, result)
                     print(response.description)
                     events.enqueue(element: response)
