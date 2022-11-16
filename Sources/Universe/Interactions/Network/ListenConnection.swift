@@ -34,6 +34,7 @@ public class ListenConnection: TransmissionTypes.Connection
 
     public func readWithLengthPrefix(prefixSizeInBits: Int) -> Data?
     {
+        self.universe.logger.log("🔌 ListenConnection readWithLengthPrefix")
         return self.read(.lengthPrefixSizeInBits(prefixSizeInBits))
     }
 
@@ -49,6 +50,7 @@ public class ListenConnection: TransmissionTypes.Connection
 
     public func writeWithLengthPrefix(data: Data, prefixSizeInBits: Int) -> Bool
     {
+        self.universe.logger.log("🔌 ListenConnection writeWithLengthPrefix")
         return self.spacetimeWrite(data: data, prefixSizeInBits: prefixSizeInBits)
     }
 

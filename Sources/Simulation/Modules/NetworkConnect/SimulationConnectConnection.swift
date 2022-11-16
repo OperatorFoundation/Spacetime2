@@ -7,30 +7,39 @@
 
 import Chord
 import Foundation
+
+#if os(macOS) || os(iOS)
+import os.log
+#else
+import Logging
+#endif
+
 import Spacetime
 import TransmissionTypes
 
 public class SimulationConnectConnection
 {
+    let logger: Logger?
     let networkConnection: TransmissionTypes.Connection
     fileprivate var reads: [UUID: Read] = [:]
     fileprivate var writes: [UUID: Write] = [:]
     fileprivate var closes: [UUID: Close] = [:]
 
-    public init(_ networkConnection: TransmissionTypes.Connection)
+    public init(_ networkConnection: TransmissionTypes.Connection, logger: Logger? = nil)
     {
+        self.logger = logger
         self.networkConnection = networkConnection
     }
 
     public func read(request: NetworkConnectReadRequest, channel: BlockingQueue<Event>)
     {
-        let read = Read(simulationConnection: self, networkConnection: self.networkConnection, request: request, events: channel)
+        let read = Read(simulationConnection: self, networkConnection: self.networkConnection, request: request, events: channel, logger: logger)
         self.reads[read.uuid] = read
     }
 
     public func write(request: NetworkConnectWriteRequest, channel: BlockingQueue<Event>)
     {
-        let write = Write(simulationConnection: self, networkConnection: self.networkConnection, request: request, events: channel)
+        let write = Write(simulationConnection: self, networkConnection: self.networkConnection, request: request, events: channel, logger: logger)
         self.writes[write.uuid] = write
     }
 
@@ -43,6 +52,7 @@ public class SimulationConnectConnection
 
 fileprivate struct Read
 {
+    let logger: Logger?
     let simulationConnection: SimulationConnectConnection
     let networkConnection: TransmissionTypes.Connection
     let request: NetworkConnectReadRequest
@@ -51,12 +61,13 @@ fileprivate struct Read
     let response: NetworkConnectReadResponse? = nil
     let uuid = UUID()
 
-    public init(simulationConnection: SimulationConnectConnection, networkConnection: TransmissionTypes.Connection, request: NetworkConnectReadRequest, events: BlockingQueue<Event>)
+    public init(simulationConnection: SimulationConnectConnection, networkConnection: TransmissionTypes.Connection, request: NetworkConnectReadRequest, events: BlockingQueue<Event>, logger: Logger? = nil)
     {
         self.simulationConnection = simulationConnection
         self.networkConnection = networkConnection
         self.request = request
         self.events = events
+        self.logger = logger
 
         let uuid = self.uuid
 
@@ -74,7 +85,14 @@ fileprivate struct Read
                     }
 
                     let response = NetworkConnectReadResponse(request.id, request.socketId, result)
+                    
+                    if logger != nil
+                    {
+                        logAThing(logger: logger!, logMessage: "SimulationConnectConnection: \(response.description)")
+                    }
+                    
                     print(response.description)
+                    
                     events.enqueue(element: response)
                 case .maxSize(let size):
                     guard let result = networkConnection.read(maxSize: size) else
@@ -109,6 +127,7 @@ fileprivate struct Read
 
 fileprivate struct Write
 {
+    let logger: Logger?
     let simulationConnection: SimulationConnectConnection
     let networkConnection: TransmissionTypes.Connection
     let request: NetworkConnectWriteRequest
@@ -116,12 +135,13 @@ fileprivate struct Write
     let queue = DispatchQueue(label: "SimulationConnection.Write")
     let uuid = UUID()
 
-    public init(simulationConnection: SimulationConnectConnection, networkConnection: TransmissionTypes.Connection, request: NetworkConnectWriteRequest, events: BlockingQueue<Event>)
+    public init(simulationConnection: SimulationConnectConnection, networkConnection: TransmissionTypes.Connection, request: NetworkConnectWriteRequest, events: BlockingQueue<Event>, logger: Logger? = nil)
     {
         self.simulationConnection = simulationConnection
         self.networkConnection = networkConnection
         self.request = request
         self.events = events
+        self.logger = logger
 
         let uuid = self.uuid
 
@@ -137,6 +157,12 @@ fileprivate struct Write
                 }
 
                 let response = Affected(request.id)
+                
+                if logger != nil
+                {
+                    logAThing(logger: logger!, logMessage: "SimulationConnectConnection: \(response.description)")
+                }
+                
                 print(response.description)
                 events.enqueue(element: response)
             }

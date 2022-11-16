@@ -7,12 +7,22 @@
 
 import Chord
 import Foundation
+
+#if os(macOS) || os(iOS)
+import os.log
+#else
+import Logging
+#endif
+
 import Spacetime
 
 public class PersistenceModule: Module
 {
+    
+    
     static public let name = "persistence"
-
+    
+    public var logger: Logger?
     let dataDatabase = DataDatabase.instance
     let relationshipDatabase = RelationshipDatabase.instance
 
@@ -20,7 +30,12 @@ public class PersistenceModule: Module
     {
         return PersistenceModule.name
     }
-
+    
+    public func setLogger(logger: Logger?)
+    {
+        self.logger = logger
+    }
+    
     public func handleEffect(_ effect: Effect, _ channel: BlockingQueue<Event>) -> Event?
     {
         switch effect

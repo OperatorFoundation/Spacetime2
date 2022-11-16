@@ -41,12 +41,18 @@ public class Simulation
         }
         
         self.capabilities = capabilities
-
+        
+        for builtInModule in BuiltinModules.modules
+        {
+            builtInModule.value.setLogger(logger: logger)
+        }
+        
         if let userModules = userModules
         {
             for module in userModules
             {
                 self.userModules[module.name()] = module
+                module.setLogger(logger: logger)
             }
         }
 
@@ -68,7 +74,7 @@ public class Simulation
                     skip()
 
                 default:
-                    print(effect.description)
+                    logAThing(logger: logger, logMessage: "Spacetime.Simulation: \(effect.description)")
             }
 
             var handled = false
@@ -110,17 +116,8 @@ public class Simulation
                 {
                     if let response = module.handleEffect(effect, self.events)
                     {
-                        #if os(macOS) || os(iOS)
-                        logger.log("🪐 Spacetime: Simulation handleEffects() enqueing event: \(response.description, privacy: .public)")
-                        #else
-                        logger.debug("🪐 Spacetime: Simulation handleEffects() enqueing event: \(response.description)")
-                        #endif
+                        logAThing(logger: logger, logMessage: "Spacetime.Simulation: \(response.description) ")
                         events.enqueue(element: response)
-                        #if os(macOS) || os(iOS)
-                        logger.log("🪐 Spacetime: Simulation handleEffects() enqued event: \(response.description, privacy: .public) ")
-                        #else
-                        logger.debug("🪐 Spacetime: Simulation handleEffects() enqued event: \(response.description) ")
-                        #endif
                     }
 
                     break
@@ -143,4 +140,13 @@ public class Simulation
     {
         return
     }
+}
+
+func logAThing(logger: Logger, logMessage: String)
+{
+    #if os(macOS) || os(iOS)
+    logger.log("🪐 \(logMessage, privacy: .public)")
+    #else
+    logger.debug("🪐 \(logMessage)")
+    #endif
 }

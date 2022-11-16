@@ -7,15 +7,33 @@
 
 import Chord
 import Foundation
+
+#if os(macOS) || os(iOS)
+import os.log
+#else
+import Logging
+#endif
+
 import Spacetime
 import Transmission
 
 public class NetworkConnectModule: Module
 {
+    public var logger: Logger? = nil
     static public let name = "networkConnect"
 
     public var connections: [UUID: SimulationConnectConnection] = [:]
 
+    public init(logger: Logger? = nil)
+    {
+        self.logger = logger
+    }
+    
+    public func setLogger(logger: Logger?)
+    {
+        self.logger = logger
+    }
+    
     public func name() -> String
     {
         return NetworkConnectModule.name
@@ -95,7 +113,7 @@ public class NetworkConnectModule: Module
             return nil
         }
 
-        let connection = SimulationConnectConnection(networkConnection)
+        let connection = SimulationConnectConnection(networkConnection, logger: logger)
         self.connections[uuid] = connection
 
         return uuid

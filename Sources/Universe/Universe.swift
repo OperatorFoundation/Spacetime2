@@ -18,13 +18,13 @@ import SwiftQueue
 
 open class Universe
 {
-    let logger: Logger
+    public var logger: Logger
     let effects: BlockingQueue<Effect>
     let events: BlockingQueue<Event>
     var channels: [UUID: BlockingQueue<Event>] = [:]
     var database: CodableDatabase? = nil
 
-    public init(effects: BlockingQueue<Effect>, events: BlockingQueue<Event>, logger: Logger? = nil)
+    public init(effects: BlockingQueue<Effect>, events: BlockingQueue<Event>, logger: Logger?)
     {
         self.effects = effects
         self.events = events
@@ -77,37 +77,14 @@ open class Universe
 
     func distributeEvents()
     {
-        #if os(macOS) || os(iOS)
-        logger.log("🪐 Spacetime.Universe: distributeEvents called, beginning loop...")
-        #else
-        logger.debug("🪐 Spacetime.Universe: distributeEvents called, beginning loop...")
-        #endif
-
         while true
         {
             let event = self.events.dequeue()
             
-            #if os(macOS) || os(iOS)
-            logger.log("🪐 Spacetime.Universe: distributeEvents dequed \(event.description, privacy: .public)")
-            #else
-            logger.debug("🪐 Spacetime.Universe: distributeEvents dequed \(event.description)")
-            #endif
-            
             if let id = event.effectId
             {
-                #if os(macOS) || os(iOS)
-                logger.log("🪐 Spacetime.Universe: distributeEvents adding event to channel queue \(event.description, privacy: .public)")
-                #else
-                logger.debug("🪐 Spacetime.Universe: distributeEvents adding event to channel queue \(event.description)")
-                #endif
-
                 guard let channel = self.channels[id] else
                 {
-                    #if os(macOS) || os(iOS)
-                    logger.log("🪐 Spacetime.Universe: Unknown channel id \(id)")
-                    #else
-                    logger.debug("🪐 Spacetime.Universe: Unknown channel id \(id)")
-                    #endif
                     continue
                 }
 
@@ -117,25 +94,8 @@ open class Universe
             }
             else
             {
-                #if os(macOS) || os(iOS)
-                logger.log("🪐 Spacetime.Universe: distributeEvents calling process(event) \(event.description, privacy: .public)")
-                #else
-                logger.debug("🪐 Spacetime.Universe: distributeEvents calling process(event) \(event.description)")
-                #endif
-
                 self.processEvent(event)
-                #if os(macOS) || os(iOS)
-                logger.log("🪐 Spacetime.Universe: distributeEvents finished calling process(event) \(event.description, privacy: .public)")
-                #else
-                logger.debug("🪐 Spacetime.Universe: distributeEvents finished calling process(event) \(event.description)")
-                #endif
             }
-            
-            #if os(macOS) || os(iOS)
-            logger.log("🪐 Spacetime.Universe: distributeEvents finished handling \(event.description, privacy: .public)")
-            #else
-            logger.debug("🪐 Spacetime.Universe: distributeEvents finished handling \(event.description)")
-            #endif
         }
     }
 }

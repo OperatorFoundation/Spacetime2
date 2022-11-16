@@ -7,15 +7,28 @@
 
 import Chord
 import Foundation
+
+#if os(macOS) || os(iOS)
+import os.log
+#else
+import Logging
+#endif
+
 import Spacetime
 
 public class RandomModule: Module
 {
     static public let name = "random"
+    public var logger: Logger?
 
     public func name() -> String
     {
         return RandomModule.name
+    }
+    
+    public func setLogger(logger: Logger?)
+    {
+        self.logger = logger
     }
 
     public func handleEffect(_ effect: Effect, _ channel: BlockingQueue<Event>) -> Event?

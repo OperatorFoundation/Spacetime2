@@ -7,6 +7,13 @@
 
 import Chord
 import Foundation
+
+#if os(macOS) || os(iOS)
+import os.log
+#else
+import Logging
+#endif
+
 import Spacetime
 import Transmission
 
@@ -14,12 +21,18 @@ public class NetworkListenModule: Module
 {
     static public let name = "networkListen"
 
+    public var logger: Logger?
     public var listeners: [UUID: SimulationListener] = [:]
     public var connections: [UUID: SimulationListenConnection] = [:]
 
     public func name() -> String
     {
         return NetworkListenModule.name
+    }
+    
+    public func setLogger(logger: Logger?)
+    {
+        self.logger = logger
     }
 
     public func handleEffect(_ effect: Effect, _ channel: BlockingQueue<Event>) -> Event?

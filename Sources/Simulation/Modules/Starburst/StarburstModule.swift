@@ -5,6 +5,12 @@
 //  Created by Joshua Clark on 7/22/22.
 //
 
+#if os(macOS) || os(iOS)
+import os.log
+#else
+import Logging
+#endif
+
 import Chord
 import Datable
 import Foundation
@@ -13,10 +19,16 @@ import Spacetime
 public class StarburstModule: Module
 {
     static public let name =  "starburst"
+    public var logger: Logger?
 
     public func name() -> String
     {
         return StarburstModule.name
+    }
+    
+    public func setLogger(logger: Logger?)
+    {
+        self.logger = logger
     }
 
     public func handleEffect(_ effect: Effect, _ channel: BlockingQueue<Event>) -> Event?

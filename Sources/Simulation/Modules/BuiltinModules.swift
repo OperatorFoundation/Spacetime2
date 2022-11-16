@@ -15,7 +15,7 @@ public class BuiltinModules
         PersistenceModule.name: PersistenceModule(),
         RandomModule.name: RandomModule(),
         NetworkListenModule.name: NetworkListenModule(),
-        NetworkConnectModule.name: NetworkConnectModule(),
+        NetworkConnectModule.name: NetworkConnectModule()
     ]
     #else
     static public let modules: [String: Module] = [

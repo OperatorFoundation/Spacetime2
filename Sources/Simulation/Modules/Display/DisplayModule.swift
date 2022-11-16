@@ -7,10 +7,24 @@
 
 import Chord
 import Foundation
+
+#if os(macOS) || os(iOS)
+import os.log
+#else
+import Logging
+#endif
+
 import Spacetime
 
 public class DisplayModule: Module
 {
+    public var logger: Logger?
+    
+    public func setLogger(logger: Logger?)
+    {
+        self.logger = logger
+    }
+    
     static public let name = "display"
 
     public func name() -> String
