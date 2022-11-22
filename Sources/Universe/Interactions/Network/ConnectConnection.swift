@@ -43,6 +43,11 @@ public class ConnectConnection: TransmissionTypes.Connection
         return self.read(.exactSize(size))
     }
 
+    public func unsafeRead(size: Int) -> Data?
+    {
+        return self.read(.exactSize(size))
+    }
+
     public func read(maxSize: Int) -> Data?
     {
         return self.read(.maxSize(maxSize))
