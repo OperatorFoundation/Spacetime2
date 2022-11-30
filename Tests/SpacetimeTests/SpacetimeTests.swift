@@ -8,14 +8,14 @@ final class SpacetimeTests: XCTestCase {
     func testUniverse() throws
     {
         let simulation = Simulation(capabilities: Capabilities(.display))
-        let universe = Universe(effects: simulation.effects, events: simulation.events)
+        let universe = Universe(effects: simulation.effects, events: simulation.events, logger: nil)
         universe.display("test1")
     }
 
     func testRandom() throws
     {
         let simulation = Simulation(capabilities: Capabilities(.display, .random))
-        let universe = Universe(effects: simulation.effects, events: simulation.events)
+        let universe = Universe(effects: simulation.effects, events: simulation.events, logger: nil)
         guard let r = universe.random() else
         {
             XCTFail()
@@ -29,7 +29,7 @@ final class SpacetimeTests: XCTestCase {
         let done = expectation(description: "awaited universe.run()")
 
         let simulation = Simulation(capabilities: Capabilities(.display, .random, .networkConnect))
-        let universe = TestUniverse(effects: simulation.effects, events: simulation.events)
+        let universe = TestUniverse(effects: simulation.effects, events: simulation.events, logger: nil)
 
         let queue = DispatchQueue(label: "testUniverseSubclass.run")
         queue.async
@@ -54,7 +54,7 @@ final class SpacetimeTests: XCTestCase {
         let done = expectation(description: "awaited universe.run()")
 
         let simulation = Simulation(capabilities: Capabilities(.display, .random, .networkConnect))
-        let universe = TestNetworkClientUniverse(effects: simulation.effects, events: simulation.events)
+        let universe = TestNetworkClientUniverse(effects: simulation.effects, events: simulation.events, logger: nil)
 
         let queue = DispatchQueue(label: "testUniverseSubclassNetworkClient.run")
         queue.async
@@ -79,7 +79,7 @@ final class SpacetimeTests: XCTestCase {
         let done = expectation(description: "awaited universe.run()")
 
         let simulation = Simulation(capabilities: Capabilities(.display, .random, .networkConnect))
-        let universe = TestNetworkServerUniverse(effects: simulation.effects, events: simulation.events)
+        let universe = TestNetworkServerUniverse(effects: simulation.effects, events: simulation.events, logger: nil)
 
         let queue = DispatchQueue(label: "testUniverseSubclassNetworkServer.run")
         queue.async

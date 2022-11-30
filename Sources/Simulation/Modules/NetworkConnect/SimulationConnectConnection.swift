@@ -86,7 +86,7 @@ fileprivate struct Read
                     }
 
                     let response = NetworkConnectReadResponse(request.id, request.socketId, result)
-                    logAThing(logger: logger!, logMessage: "SimulationConnectConnection: \(response.description)")
+                    logAThing(logger: logger, logMessage: "SimulationConnectConnection: \(response.description)")
                     events.enqueue(element: response)
                     
                 case .maxSize(let size):
