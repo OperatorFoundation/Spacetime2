@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  StarburstRequest.swift
 //  
 //
 //  Created by Joshua Clark on 7/22/22.
@@ -17,5 +17,18 @@ public class StarburstRequest: Effect
     public init()
     {
         super.init(module: BuiltinModuleNames.starburst.rawValue)
+    }
+
+    enum CodingKeys: String, CodingKey
+    {
+        case id
+    }
+
+    required init(from decoder: Decoder) throws
+    {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let id = try container.decode(UUID.self, forKey: .id)
+
+        super.init(id: id, module: BuiltinModuleNames.starburst.rawValue)
     }
 }

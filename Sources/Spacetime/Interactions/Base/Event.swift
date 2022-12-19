@@ -8,7 +8,7 @@
 import Foundation
 import SwiftHexTools
 
-open class Event: CustomStringConvertible
+open class Event: CustomStringConvertible, Codable
 {
     public let effectId: UUID?
     public let module: String

@@ -27,4 +27,26 @@ public class NetworkListenWriteRequest: Effect
 
         super.init(module: BuiltinModuleNames.networkListen.rawValue)
     }
+
+    enum CodingKeys: String, CodingKey
+    {
+        case id
+        case socketId
+        case data
+        case lengthPrefixStyleInBits
+    }
+
+    required init(from decoder: Decoder) throws
+    {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let id = try container.decode(UUID.self, forKey: .id)
+        let socketId = try container.decode(UUID.self, forKey: .socketId)
+        let data = try container.decode(Data.self, forKey: .data)
+        let lengthPrefixStyleInBits = try container.decode(Int?.self, forKey: .lengthPrefixStyleInBits)
+
+        self.socketId = socketId
+        self.data = data
+        self.lengthPrefixSizeInBits = lengthPrefixStyleInBits
+        super.init(id: id, module: BuiltinModuleNames.networkListen.rawValue)
+    }
 }

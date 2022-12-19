@@ -7,9 +7,9 @@
 
 import Foundation
 
-open class Effect: CustomStringConvertible
+open class Effect: CustomStringConvertible, Codable
 {
-    public let id: UUID = UUID()
+    public let id: UUID
     public let module: String
 
     open var description: String
@@ -17,8 +17,9 @@ open class Effect: CustomStringConvertible
         return "Effect(\(type(of: self)))[id: \(self.id)]"
     }
 
-    public init(module: String)
+    public init(id: UUID = UUID(), module: String)
     {
+        self.id = id
         self.module = module
     }
 }

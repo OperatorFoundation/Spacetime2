@@ -47,4 +47,26 @@ public class DataLoadResponse: Event
 
         super.init(effectId, module: BuiltinModuleNames.persistence.rawValue)
     }
+
+    enum CodingKeys: String, CodingKey
+    {
+        case effectId
+        case dataId
+        case success
+        case data
+    }
+
+    required init(from decoder: Decoder) throws
+    {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let effectId = try container.decode(UUID.self, forKey: .effectId)
+        let dataId = try container.decode(UInt64.self, forKey: .dataId)
+        let success = try container.decode(Bool.self, forKey: .success)
+        let data = try container.decode(Data?.self, forKey: .data)
+
+        self.dataId = dataId
+        self.success = success
+        self.data = data
+        super.init(effectId, module: BuiltinModuleNames.persistence.rawValue)
+    }
 }

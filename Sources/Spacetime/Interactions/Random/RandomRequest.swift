@@ -18,4 +18,17 @@ public class RandomRequest: Effect
     {
         super.init(module: BuiltinModuleNames.random.rawValue)
     }
+
+    enum CodingKeys: String, CodingKey
+    {
+        case id
+    }
+
+    required init(from decoder: Decoder) throws
+    {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let id = try container.decode(UUID.self, forKey: .id)
+
+        super.init(id: id, module: BuiltinModuleNames.random.rawValue)
+    }
 }

@@ -28,4 +28,26 @@ public class ListenRequest: Effect
 
         super.init(module: BuiltinModuleNames.networkListen.rawValue)
     }
+
+    enum CodingKeys: String, CodingKey
+    {
+        case id
+        case address
+        case port
+        case type
+    }
+
+    required init(from decoder: Decoder) throws
+    {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let id = try container.decode(UUID.self, forKey: .id)
+        let address = try container.decode(String.self, forKey: .address)
+        let port = try container.decode(Int.self, forKey: .port)
+        let type = try container.decode(ConnectionType.self, forKey: .type)
+
+        self.address = address
+        self.port = port
+        self.type = type
+        super.init(id: id, module: BuiltinModuleNames.networkListen.rawValue)
+    }
 }

@@ -22,4 +22,20 @@ public class RandomResponse: Event
         
         super.init(effectId, module: BuiltinModuleNames.random.rawValue)
     }
+
+    enum CodingKeys: String, CodingKey
+    {
+        case effectId
+        case value
+    }
+
+    required init(from decoder: Decoder) throws
+    {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let effectId = try container.decode(UUID.self, forKey: .effectId)
+        let value = try container.decode(UInt64.self, forKey: .value)
+
+        self.value = value
+        super.init(effectId, module: BuiltinModuleNames.random.rawValue)
+    }
 }

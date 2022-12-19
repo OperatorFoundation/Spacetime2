@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  StarburstResponse.swift
 //  
 //
 //  Created by Joshua Clark on 7/22/22.
@@ -20,6 +20,22 @@ public class StarburstResponse: Event
     {
         self.message = message
         
+        super.init(effectId, module: BuiltinModuleNames.starburst.rawValue)
+    }
+
+    enum CodingKeys: String, CodingKey
+    {
+        case effectId
+        case message
+    }
+
+    required init(from decoder: Decoder) throws
+    {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let effectId = try container.decode(UUID.self, forKey: .effectId)
+        let message = try container.decode(Data.self, forKey: .message)
+
+        self.message = message
         super.init(effectId, module: BuiltinModuleNames.starburst.rawValue)
     }
 }

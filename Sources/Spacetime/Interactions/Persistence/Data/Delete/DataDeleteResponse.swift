@@ -24,4 +24,23 @@ public class DataDeleteResponse: Event
 
         super.init(effectId, module: BuiltinModuleNames.persistence.rawValue)
     }
+
+    enum CodingKeys: String, CodingKey
+    {
+        case effectId
+        case dataId
+        case success
+    }
+
+    required init(from decoder: Decoder) throws
+    {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let effectId = try container.decode(UUID.self, forKey: .effectId)
+        let dataId = try container.decode(UInt64.self, forKey: .dataId)
+        let success = try container.decode(Bool.self, forKey: .success)
+
+        self.dataId = dataId
+        self.success = success
+        super.init(effectId, module: BuiltinModuleNames.persistence.rawValue)
+    }
 }

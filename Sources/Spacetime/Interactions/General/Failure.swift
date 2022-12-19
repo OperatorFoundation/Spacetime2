@@ -18,4 +18,17 @@ public class Failure: Event
     {
         super.init(effectId, module: BuiltinModuleNames.general.rawValue)
     }
+
+    enum CodingKeys: String, CodingKey
+    {
+        case effectId
+    }
+
+    required init(from decoder: Decoder) throws
+    {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let effectId = try container.decode(UUID.self, forKey: .effectId)
+
+        super.init(effectId, module: BuiltinModuleNames.general.rawValue)
+    }
 }

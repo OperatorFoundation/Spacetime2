@@ -24,9 +24,28 @@ public class NetworkConnectReadRequest: Effect
 
         super.init(module: BuiltinModuleNames.networkConnect.rawValue)
     }
+
+    enum CodingKeys: String, CodingKey
+    {
+        case id
+        case socketId
+        case style
+    }
+
+    required init(from decoder: Decoder) throws
+    {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let id = try container.decode(UUID.self, forKey: .id)
+        let socketId = try container.decode(UUID.self, forKey: .socketId)
+        let style = try container.decode(NetworkConnectReadStyle.self, forKey: .style)
+
+        self.socketId = socketId
+        self.style = style
+        super.init(id: id, module: BuiltinModuleNames.networkConnect.rawValue)
+    }
 }
 
-public enum NetworkConnectReadStyle
+public enum NetworkConnectReadStyle: Codable
 {
     case exactSize(Int)
     case maxSize(Int)

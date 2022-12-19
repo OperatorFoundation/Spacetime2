@@ -26,4 +26,26 @@ public class DataSaveRequest: Effect
 
         super.init(module: BuiltinModuleNames.persistence.rawValue)
     }
+
+    enum CodingKeys: String, CodingKey
+    {
+        case id
+        case dataId
+        case type
+        case data
+    }
+
+    required init(from decoder: Decoder) throws
+    {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let id = try container.decode(UUID.self, forKey: .id)
+        let dataId = try container.decode(UInt64.self, forKey: .dataId)
+        let type = try container.decode(String.self, forKey: .type)
+        let data = try container.decode(Data.self, forKey: .data)
+
+        self.dataId = dataId
+        self.type = type
+        self.data = data
+        super.init(id: id, module: BuiltinModuleNames.persistence.rawValue)
+    }
 }

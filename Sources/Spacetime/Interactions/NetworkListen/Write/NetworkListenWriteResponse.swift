@@ -18,4 +18,18 @@ public class NetworkListenWriteResponse: Event
     {
         super.init(effectId, module: BuiltinModuleNames.networkListen.rawValue)
     }
+
+    enum CodingKeys: String, CodingKey
+    {
+        case effectId
+    }
+
+    required init(from decoder: Decoder) throws
+    {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let effectId = try container.decode(UUID.self, forKey: .effectId)
+
+        super.init(effectId, module: BuiltinModuleNames.networkListen.rawValue)
+    }
 }
+

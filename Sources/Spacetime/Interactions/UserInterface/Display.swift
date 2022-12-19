@@ -22,4 +22,20 @@ public class Display: Effect
 
         super.init(module: BuiltinModuleNames.display.rawValue)
     }
+
+    enum CodingKeys: String, CodingKey
+    {
+        case id
+        case string
+    }
+
+    required init(from decoder: Decoder) throws
+    {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let id = try container.decode(UUID.self, forKey: .id)
+        let string = try container.decode(String.self, forKey: .string)
+
+        self.string = string
+        super.init(id: id, module: BuiltinModuleNames.display.rawValue)
+    }
 }

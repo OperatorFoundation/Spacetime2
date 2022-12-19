@@ -22,4 +22,20 @@ public class RelationshipQueryResponse: Event
 
         super.init(effectId, module: BuiltinModuleNames.persistence.rawValue)
     }
+
+    enum CodingKeys: String, CodingKey
+    {
+        case effectId
+        case results
+    }
+
+    required init(from decoder: Decoder) throws
+    {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let effectId = try container.decode(UUID.self, forKey: .effectId)
+        let results = try container.decode([Relationship].self, forKey: .results)
+
+        self.results = results
+        super.init(effectId, module: BuiltinModuleNames.persistence.rawValue)
+    }
 }

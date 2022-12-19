@@ -26,4 +26,26 @@ public class RelationshipQueryRequest: Effect
 
         super.init(module: BuiltinModuleNames.persistence.rawValue)
     }
+
+    enum CodingKeys: String, CodingKey
+    {
+        case id
+        case subject
+        case relation
+        case object
+    }
+
+    required init(from decoder: Decoder) throws
+    {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let id = try container.decode(UUID.self, forKey: .id)
+        let subject = try container.decode(UInt64?.self, forKey: .subject)
+        let relation = try container.decode(Relation.self, forKey: .relation)
+        let object = try container.decode(UInt64?.self, forKey: .object)
+
+        self.subject = subject
+        self.relation = relation
+        self.object = object
+        super.init(id: id, module: BuiltinModuleNames.persistence.rawValue)
+    }
 }

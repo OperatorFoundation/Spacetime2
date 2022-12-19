@@ -22,4 +22,20 @@ public class RelationshipSaveRequest: Effect
 
         super.init(module: BuiltinModuleNames.persistence.rawValue)
     }
+
+    enum CodingKeys: String, CodingKey
+    {
+        case id
+        case relationship
+    }
+
+    required init(from decoder: Decoder) throws
+    {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let id = try container.decode(UUID.self, forKey: .id)
+        let relationship = try container.decode(Relationship.self, forKey: .relationship)
+
+        self.relationship = relationship
+        super.init(id: id, module: BuiltinModuleNames.persistence.rawValue)
+    }
 }

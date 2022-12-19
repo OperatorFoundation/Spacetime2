@@ -22,4 +22,20 @@ public class DateResponse: Event
         
         super.init(effectId, module: BuiltinModuleNames.time.rawValue)
     }
+
+    enum CodingKeys: String, CodingKey
+    {
+        case effectId
+        case date
+    }
+
+    required init(from decoder: Decoder) throws
+    {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let effectId = try container.decode(UUID.self, forKey: .effectId)
+        let date = try container.decode(Date.self, forKey: .date)
+
+        self.date = date
+        super.init(effectId, module: BuiltinModuleNames.time.rawValue)
+    }
 }
