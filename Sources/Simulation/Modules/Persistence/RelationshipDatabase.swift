@@ -11,8 +11,6 @@ import Spacetime
 
 public class RelationshipDatabase
 {
-    static public let instance: RelationshipDatabase = RelationshipDatabase(root: "relationshipDatabase")
-
     let root: String
     let path: String
 

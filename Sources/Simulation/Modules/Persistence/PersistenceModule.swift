@@ -1,127 +1,111 @@
 //
 //  PersistenceModule.swift
-//  
 //
-//  Created by Dr. Brandon Wiley on 3/23/22.
+//
+//  Created by Clockwork on Jan 12, 2023.
 //
 
-import Chord
 import Foundation
-
 #if os(macOS) || os(iOS)
 import os.log
 #else
 import Logging
 #endif
 
+import Chord
 import Spacetime
 
 public class PersistenceModule: Module
 {
-    
-    
-    static public let name = "persistence"
-    
+    static public let name = "Persistence"
+
     public var logger: Logger?
-    let dataDatabase = DataDatabase.instance
-    let relationshipDatabase = RelationshipDatabase.instance
+
+    let handler: Persistence
+
+    public init()
+    {
+        self.handler = try! Persistence(root: "spacetime")
+    }
 
     public func name() -> String
     {
-        return PersistenceModule.name
+        return Self.name
     }
-    
+
     public func setLogger(logger: Logger?)
     {
         self.logger = logger
     }
-    
+
     public func handleEffect(_ effect: Effect, _ channel: BlockingQueue<Event>) -> Event?
     {
-        switch effect
+        do
         {
-            case let request as DataDeleteRequest:
-                let result = self.dataDatabase.delete(identifier: request.dataId)
-                let response = DataDeleteResponse(request.id, request.dataId, success: result)
-                print(response.description)
-                return response
-
-            case let request as DataLoadRequest:
-                do
-                {
-                    let result = try self.dataDatabase.getStatic(identifier: request.dataId)
-                    let response = DataLoadResponse(request.id, request.dataId, success: true, data: result)
+            switch effect
+            {
+                case let request as PersistenceAllocateidentifierRequest:
+                    let result = try self.handler.allocateIdentifier()
+                    let response = PersistenceAllocateidentifierResponse(request.id, result)
                     print(response.description)
                     return response
-                }
-                catch
-                {
-                    let response = DataLoadResponse(request.id, request.dataId, success: false, data: nil)
+                case let request as PersistenceExistsRequest:
+                    let result = self.handler.exists(identifier: request.identifier)
+                    let response = PersistenceExistsResponse(request.id, result)
                     print(response.description)
                     return response
-                }
-
-            case let request as DataSaveRequest:
-                do
-                {
-                    try self.dataDatabase.save(identifier: request.dataId, type: request.type, data: request.data)
-                    let response = DataSaveResponse(request.id, request.dataId, success: true)
+                case let request as PersistenceLoaddataRequest:
+                    let result = try self.handler.loadData(identifier: request.identifier)
+                    let response = PersistenceLoaddataResponse(request.id, result)
                     print(response.description)
                     return response
-                }
-                catch
-                {
-                    let response = DataSaveResponse(request.id, request.dataId, success: false)
+                case let request as PersistenceSavedataRequest:
+                    try self.handler.saveData(identifier: request.identifier, type: request.type, data: request.data)
+                    let response = PersistenceSavedataResponse(request.id)
                     print(response.description)
                     return response
-                }
-
-            case let request as RelationshipQueryRequest:
-                let results = self.relationshipDatabase.query(subject: request.subject, relation: request.relation, object: request.object)
-                let response = RelationshipQueryResponse(request.id, results)
-                print(response.description)
-                return response
-
-
-            case let request as RelationshipRemoveRequest:
-                do
-                {
-                    try self.relationshipDatabase.remove(relationship: request.relationship)
-                    let response = RelationshipRemoveResponse(effect.id, true)
+                case let request as PersistenceDeletedataRequest:
+                    let result = self.handler.deleteData(identifier: request.identifier)
+                    let response = PersistenceDeletedataResponse(request.id, result)
                     print(response.description)
                     return response
-
-                }
-                catch
-                {
-                    let response = RelationshipRemoveResponse(effect.id, false)
+                case let request as PersistenceCountRequest:
+                    let result = try self.handler.count(type: request.type)
+                    let response = PersistenceCountResponse(request.id, result)
                     print(response.description)
                     return response
-
-                }
-
-            case let request as RelationshipSaveRequest:
-                do
-                {
-                    try self.relationshipDatabase.save(relationship: request.relationship)
-                    let response = RelationshipRemoveResponse(effect.id, true)
+                case let request as PersistenceLoadRequest:
+                    let result = try self.handler.load(type: request.type, offset: request.offset)
+                    let response = PersistenceLoadResponse(request.id, result)
                     print(response.description)
                     return response
-
-                }
-                catch
-                {
-                    let response = RelationshipRemoveResponse(effect.id, false)
+                case let request as PersistenceQueryRequest:
+                    let result = self.handler.query(subject: request.subject, relation: request.relation, object: request.object)
+                    let response = PersistenceQueryResponse(request.id, result)
                     print(response.description)
                     return response
-
-                }
-
-            default:
-                let response = Failure(effect.id)
-                print(response.description)
-                return response
-
+                case let request as PersistenceSaverelationshipRequest:
+                    try self.handler.saveRelationship(relationship: request.relationship)
+                    let response = PersistenceSaverelationshipResponse(request.id)
+                    print(response.description)
+                    return response
+                case let request as PersistenceDeleterelationshipRequest:
+                    try self.handler.deleteRelationship(relationship: request.relationship)
+                    let response = PersistenceDeleterelationshipResponse(request.id)
+                    print(response.description)
+                    return response
+                default:
+                    let response = Failure(effect.id)
+                    print(response.description)
+                    return response
+            }
+        }
+        catch
+        {
+            print(error)
+            let response = Failure(effect.id)
+            print(response.description)
+            return response
         }
     }
 

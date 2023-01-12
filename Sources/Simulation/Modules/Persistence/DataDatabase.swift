@@ -10,8 +10,6 @@ import Datable
 
 public class DataDatabase
 {
-    static public let instance: DataDatabase = DataDatabase(root: "dataDatabase")
-
     let root: String
     let path: String
 

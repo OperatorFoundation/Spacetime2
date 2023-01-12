@@ -19,10 +19,12 @@ import SwiftQueue
 open class Universe
 {
     public var logger: Logger
+
     let effects: BlockingQueue<Effect>
     let events: BlockingQueue<Event>
+    let lock: DispatchSemaphore = DispatchSemaphore(value: 1)
+
     var channels: [UUID: BlockingQueue<Event>] = [:]
-    var database: CodableDatabase? = nil
 
     public init(effects: BlockingQueue<Effect>, events: BlockingQueue<Event>, logger: Logger?)
     {
@@ -61,7 +63,12 @@ open class Universe
     public func processEffect(_ effect: Effect) -> Event
     {
         let channel = BlockingQueue<Event>()
+
+        self.lock.wait()
+
         self.channels[effect.id] = channel
+
+        self.lock.signal()
 
         self.effects.enqueue(element: effect)
 
@@ -84,6 +91,9 @@ open class Universe
             
             if let id = event.effectId
             {
+                defer { self.lock.signal() }
+                self.lock.wait()
+
                 guard let channel = self.channels[id] else
                 {
                     continue

@@ -1,4 +1,4 @@
-// swift-tools-version:5.5
+// swift-tools-version:5.6
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
@@ -24,8 +24,10 @@ let package = Package(
         // .package(url: /* package url */, from: "1.0.0"),
         .package(url: "https://github.com/apple/swift-log.git", from: "1.0.0"),
 
+        .package(url: "https://github.com/OperatorFoundation/Amber", branch: "main"),
         .package(url: "https://github.com/OperatorFoundation/Chord", branch: "main"),
         .package(url: "https://github.com/OperatorFoundation/Datable", branch: "main"),
+        .package(url: "https://github.com/OperatorFoundation/Parchment", branch: "main"),
         .package(url: "https://github.com/OperatorFoundation/SwiftHexTools", branch: "main"),
         .package(url: "https://github.com/OperatorFoundation/SwiftQueue", branch: "main"),
         .package(url: "https://github.com/OperatorFoundation/Transmission", branch: "main"),
@@ -38,12 +40,16 @@ let package = Package(
             name: "Spacetime",
             dependencies: [
                 "Datable",
+
+                .product(name: "ParchmentFile", package: "Parchment"),
             ]),
         .target(
             name: "Universe",
             dependencies: [
                 .product(name: "Logging", package: "swift-log"),
+                .product(name: "ParchmentFile", package: "Parchment"),
 
+                "Amber",
                 "Chord",
                 "Datable",
                 "SwiftHexTools",
@@ -55,11 +61,13 @@ let package = Package(
             name: "Simulation",
             dependencies: [
                 .product(name: "Logging", package: "swift-log"),
+                .product(name: "ParchmentFile", package: "Parchment"),
 
+                "Amber",
                 "Chord",
                 "Spacetime",
                 "SwiftQueue",
-                "Transmission"
+                "Transmission",
             ]),
         .testTarget(
             name: "SpacetimeTests",
