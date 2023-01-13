@@ -75,6 +75,11 @@ public class Persistence
         return result
     }
 
+    public func append(type: String, identifier: UInt64) throws
+    {
+        try self.index.append(type: type, identifier: identifier)
+    }
+
     // Relationship
     public func query(subject: UInt64?, relation: Relation?, object: UInt64?) -> [Relationship]
     {

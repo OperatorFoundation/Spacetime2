@@ -116,6 +116,21 @@ extension Universe
         }
     }
 
+    public func append(type: String, identifier: UInt64) throws
+    {
+        let request = PersistenceAppendRequest(type: type, identifier: identifier)
+        let result = self.processEffect(request)
+
+        switch result
+        {
+            case is PersistenceAppendResponse:
+                return
+
+            default:
+                throw PersistenceError.failure
+        }
+    }
+
     public func query(subject: UInt64?, relation: Relation?, object: UInt64?) throws -> [Relationship]
     {
         let request = PersistenceQueryRequest(subject: subject, relation: relation, object: object)

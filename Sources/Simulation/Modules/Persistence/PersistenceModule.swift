@@ -79,6 +79,11 @@ public class PersistenceModule: Module
                     let response = PersistenceLoadResponse(request.id, result)
                     print(response.description)
                     return response
+                case let request as PersistenceAppendRequest:
+                    try self.handler.append(type: request.type, identifier: request.identifier)
+                    let response = PersistenceAppendResponse(request.id)
+                    print(response.description)
+                    return response
                 case let request as PersistenceQueryRequest:
                     let result = self.handler.query(subject: request.subject, relation: request.relation, object: request.object)
                     let response = PersistenceQueryResponse(request.id, result)

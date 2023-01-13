@@ -497,6 +497,68 @@ public class PersistenceLoadResponse: PersistenceEvent
     }
 }
 
+public class PersistenceAppendRequest: PersistenceEffect
+{
+    public let type: String
+    public let identifier: UInt64
+
+    enum CodingKeys: String, CodingKey
+    {
+        case id
+        case type
+        case identifier
+    }
+
+    public init(type: String, identifier: UInt64)
+    {
+        self.type = type
+        self.identifier = identifier
+
+        super.init()
+    }
+
+    public init(id: UUID, type: String, identifier: UInt64)
+    {
+        self.type = type
+        self.identifier = identifier
+
+        super.init(id: id)
+    }
+
+    public required init(from decoder: Decoder) throws
+    {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let id = try container.decode(UUID.self, forKey: .id)
+        let type: String = try container.decode(String.self, forKey: .type)
+        let identifier: UInt64 = try container.decode(UInt64.self, forKey: .identifier)
+
+        self.type = type
+        self.identifier = identifier
+        super.init(id: id)
+    }
+}
+
+public class PersistenceAppendResponse: PersistenceEvent
+{
+    enum CodingKeys: String, CodingKey
+    {
+        case effectId
+    }
+
+    public override init(_ effectId: UUID)
+    {
+        super.init(effectId)
+    }
+
+    public required init(from decoder: Decoder) throws
+    {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let effectId = try container.decode(UUID.self, forKey: .effectId)
+
+        super.init(effectId)
+    }
+}
+
 public class PersistenceQueryRequest: PersistenceEffect
 {
     public let subject: UInt64?

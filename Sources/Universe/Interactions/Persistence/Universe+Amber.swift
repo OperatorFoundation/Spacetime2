@@ -1,5 +1,5 @@
 //
-//  DataDatabase.swift
+//  Universe+Amber.swift
 //  Spacetime
 //
 //  Created by Dr. Brandon Wiley on 10/11/21.
@@ -31,6 +31,11 @@ extension Universe
         return results
     }
 
+    public func load<T>(identifier: UInt64) throws -> Reference<T>
+    {
+        return try Reference(universe: self, identifier: identifier)
+    }
+
     public func load<T>(identifier: UInt64) throws -> T
     {
         let data = try self.loadData(identifier: identifier)
@@ -44,12 +49,22 @@ extension Universe
         return result
     }
 
+    public func save<T>(reference: Reference<T>) throws
+    {
+        try reference.save()
+    }
+
     // FIXME - update index
-    public func save<T>(identifier: UInt64, object: T) throws
+    public func save<T>(identifier: UInt64, type: String, object: T) throws
     {
         let data = try Amber.save(object)
         let typeName = String(describing: T.self)
         try self.saveData(identifier: identifier, type: typeName, data: data)
+    }
+
+    public func delete<T>(reference: Reference<T>) throws
+    {
+        try reference.delete()
     }
 
     // FIXME - update index
