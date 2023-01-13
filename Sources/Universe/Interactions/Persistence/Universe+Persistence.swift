@@ -101,11 +101,6 @@ extension Universe
         }
     }
 
-    public func loadIndex<T>(type: String) throws -> AmberIterator<T>
-    {
-        return AmberIterator(type: type, universe: self)
-    }
-
     public func load(type: String, offset: Int) throws -> UInt64
     {
         let request = PersistenceLoadRequest(type: type, offset: offset)
