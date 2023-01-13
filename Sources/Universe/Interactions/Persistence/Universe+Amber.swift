@@ -13,6 +13,24 @@ import ParchmentFile
 
 extension Universe
 {
+    public func load<T>(type: String) throws -> [T] where T: Persistable
+    {
+        let iterator: AmberIterator<T> = AmberIterator(type: type, universe: self)
+
+        var results: [T] = []
+        while true
+        {
+            guard let user = iterator.next() else
+            {
+                return results
+            }
+
+            results.append(user)
+        }
+
+        return results
+    }
+
     public func load<T>(identifier: UInt64) throws -> T
     {
         let data = try self.loadData(identifier: identifier)
@@ -38,46 +56,6 @@ extension Universe
     public func delete(identifier: UInt64) throws -> Bool
     {
         return try self.deleteData(identifier: identifier)
-    }
-}
-
-public class IndexIterator<T>: IteratorProtocol where T: Persistable
-{
-    public typealias Element = T
-
-    let database: Universe
-    let iterator: ParchmentIterator
-
-    var running: Bool = true
-
-    public init(database: Universe, iterator: ParchmentIterator)
-    {
-        self.database = database
-        self.iterator = iterator
-    }
-
-    public func next() -> Element?
-    {
-        guard running else
-        {
-            return nil
-        }
-
-        guard let index = self.iterator.next() else
-        {
-            self.running = false
-            return nil
-        }
-
-        do
-        {
-            return try self.database.load(identifier: index)
-        }
-        catch
-        {
-            running = false
-            return nil
-        }
     }
 }
 
