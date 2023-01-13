@@ -13,6 +13,11 @@ import ParchmentFile
 
 extension Universe
 {
+    public func load<T>() throws -> IndexedCollection<T> where T: Persistable
+    {
+        return try IndexedCollection(universe: self)
+    }
+
     public func load<T>(type: String) throws -> [T] where T: Persistable
     {
         let iterator: AmberIterator<T> = AmberIterator(type: type, universe: self)
