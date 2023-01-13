@@ -18,11 +18,16 @@ public class Reference<T>
     public let universe: Universe
     public let identifier: UInt64
     public let object: T
-    public let type: String
 
     public convenience init(universe: Universe, identifier: UInt64) throws
     {
         let object: T = try universe.load(identifier: identifier)
+        self.init(universe: universe, identifier: identifier, object: object)
+    }
+
+    public convenience init(universe: Universe, object: T) throws
+    {
+        let identifier = try universe.allocateIdentifier()
         self.init(universe: universe, identifier: identifier, object: object)
     }
 
@@ -31,12 +36,11 @@ public class Reference<T>
         self.universe = universe
         self.identifier = identifier
         self.object = object
-        self.type = "\(Swift.type(of: object))"
     }
 
     public func save() throws
     {
-        try self.universe.save(identifier: self.identifier, type: self.type, object: self.object)
+        try self.universe.save(identifier: self.identifier, object: self.object)
     }
 
     public func delete() throws

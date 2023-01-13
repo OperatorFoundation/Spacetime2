@@ -60,10 +60,10 @@ extension Universe
     }
 
     // FIXME - update index
-    public func save<T>(identifier: UInt64, type: String, object: T) throws
+    public func save<T>(identifier: UInt64, object: T) throws
     {
         let data = try Amber.save(object)
-        let typeName = String(describing: T.self)
+        let typeName = "\(type(of: T.self))"
         try self.saveData(identifier: identifier, type: typeName, data: data)
     }
 
