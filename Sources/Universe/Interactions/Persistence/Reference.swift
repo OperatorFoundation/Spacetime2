@@ -24,10 +24,12 @@ public class Reference<T>: Codable where T: Codable, T: Equatable
     }
 
     // Public lets
-    public let universe: Universe?
     public let identifier: UInt64
     public let object: T
     public let type: String
+
+    // Public vars
+    public var universe: Universe?
 
     // Public inits
     public convenience init(universe: Universe, identifier: UInt64) throws
