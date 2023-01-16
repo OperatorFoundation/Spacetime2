@@ -5,8 +5,9 @@
 //  Created by Dr. Brandon Wiley on 1/29/21.
 //
 
-import Datable
 import Foundation
+
+import Datable
 
 public enum Relation: Int, Codable
 {
