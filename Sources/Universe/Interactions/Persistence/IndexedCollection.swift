@@ -9,7 +9,7 @@ import Foundation
 
 import Amber
 
-public struct IndexedCollection<T> where T: Codable
+public struct IndexedCollection<T> where T: Codable, T: Equatable
 {
     public let name = "\(type(of: T.self))"
     public let universe: Universe

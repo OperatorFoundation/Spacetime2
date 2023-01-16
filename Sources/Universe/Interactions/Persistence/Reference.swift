@@ -7,33 +7,39 @@
 
 import Foundation
 
-public class Reference<T>: Codable where T: Codable
+public class Reference<T>: Codable where T: Codable, T: Equatable
 {
+    // Private data structures
     enum CodingKeys: String, CodingKey
     {
         case identifier
         case object
     }
 
+    // Static public functions
     static public func load(universe: Universe, identifier: UInt64) throws -> Reference<T>
     {
         let object: T = try universe.load(identifier: identifier)
         return Reference(universe: universe, identifier: identifier, object: object)
     }
 
+    // Public lets
     public let universe: Universe?
     public let identifier: UInt64
     public let object: T
     public let type: String
 
+    // Public inits
     public convenience init(universe: Universe, identifier: UInt64) throws
     {
+        // Create a Reference to an existing object using its identifier
         let object: T = try universe.load(identifier: identifier)
         self.init(universe: universe, identifier: identifier, object: object)
     }
 
     public convenience init(universe: Universe, object: T) throws
     {
+        // Create a reference to a new object, using a newly allocated identifier
         let identifier = try universe.allocateIdentifier()
         self.init(universe: universe, identifier: identifier, object: object)
 
@@ -44,12 +50,14 @@ public class Reference<T>: Codable where T: Codable
 
     public init(universe: Universe?, identifier: UInt64, object: T)
     {
+        // Create a reference by specifying all parameters
         self.universe = universe
         self.identifier = identifier
         self.object = object
         self.type = "\(Swift.type(of: object))"
     }
 
+    // Codable implementation
     public required init(from decoder: Decoder) throws
     {
         let container = try decoder.container(keyedBy: CodingKeys.self)
@@ -68,14 +76,15 @@ public class Reference<T>: Codable where T: Codable
         try container.encode(self.object, forKey: CodingKeys.object)
     }
 
-    public func save() throws
+    // Public functions
+    public func copy() throws -> Reference<T>
     {
         guard let universe = self.universe else
         {
             throw ReferenceError.noUniverse
         }
 
-        try universe.save(identifier: self.identifier, object: self.object)
+        return try Reference(universe: universe, object: self.object)
     }
 
     public func delete() throws
@@ -89,17 +98,29 @@ public class Reference<T>: Codable where T: Codable
         try universe.delete(type: self.type, identifier: self.identifier)
     }
 
-    public func copy() throws -> Reference<T>
+    public func exists() throws -> Bool
     {
         guard let universe = self.universe else
         {
             throw ReferenceError.noUniverse
         }
 
-        return try Reference(universe: universe, object: self.object)
+        let other: T = try universe.load(identifier: self.identifier)
+        return other == self.object
+    }
+
+    public func save() throws
+    {
+        guard let universe = self.universe else
+        {
+            throw ReferenceError.noUniverse
+        }
+
+        try universe.save(identifier: self.identifier, object: self.object)
     }
 }
 
+// Public error type
 public enum ReferenceError: Error
 {
     case noUniverse
