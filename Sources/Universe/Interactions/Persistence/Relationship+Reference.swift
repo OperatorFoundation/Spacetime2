@@ -11,7 +11,7 @@ import Spacetime
 
 extension Relationship
 {
-    public init<T>(subject: Reference<T>, relation: Relation, object: Reference<T>)
+    public init<S, T>(subject: Reference<S>, relation: Relation, object: Reference<T>)
     {
         self.init(subject: subject.identifier, relation: relation, object: object.identifier)
     }
