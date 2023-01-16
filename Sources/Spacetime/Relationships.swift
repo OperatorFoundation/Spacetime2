@@ -12,6 +12,7 @@ public enum Relation: Int, Codable
 {
     // Once a relation has been added to the database, the number can't be changed or else it will cause problems.
     case contains = 0
+    case authors = 1
 }
 
 extension Relation: Stringable
@@ -33,6 +34,9 @@ extension Relation: Stringable
         {
             case .contains:
                 return "contains"
+
+            case .authors:
+                return "authors"
         }
     }
 }
