@@ -7,7 +7,7 @@
 
 import Foundation
 
-public class Reference<T>
+public class Reference<T> where T: Codable
 {
     static public func load(universe: Universe, identifier: UInt64) throws -> Reference<T>
     {
@@ -18,6 +18,7 @@ public class Reference<T>
     public let universe: Universe
     public let identifier: UInt64
     public let object: T
+    public let type: String
 
     public convenience init(universe: Universe, identifier: UInt64) throws
     {
@@ -29,6 +30,10 @@ public class Reference<T>
     {
         let identifier = try universe.allocateIdentifier()
         self.init(universe: universe, identifier: identifier, object: object)
+
+        try self.save()
+
+        try self.universe.append(type: type, identifier: identifier)
     }
 
     public init(universe: Universe, identifier: UInt64, object: T)
@@ -36,6 +41,7 @@ public class Reference<T>
         self.universe = universe
         self.identifier = identifier
         self.object = object
+        self.type = "\(Swift.type(of: object))"
     }
 
     public func save() throws
@@ -46,11 +52,11 @@ public class Reference<T>
     public func delete() throws
     {
         let _ = try self.universe.delete(identifier: self.identifier)
+        try self.universe.delete(type: self.type, identifier: self.identifier)
     }
 
     public func copy() throws -> Reference<T>
     {
-        let newId = try self.universe.allocateIdentifier()
-        return Reference(universe: self.universe, identifier: newId, object: self.object)
+        return try Reference(universe: self.universe, object: self.object)
     }
 }

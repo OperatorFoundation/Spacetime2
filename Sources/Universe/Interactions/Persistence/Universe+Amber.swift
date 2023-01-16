@@ -13,27 +13,10 @@ import ParchmentFile
 
 extension Universe
 {
-    public func load<T>() throws -> IndexedCollection<T> where T: Codable
+    // References
+    public func delete<T>(reference: Reference<T>) throws
     {
-        return try IndexedCollection(universe: self)
-    }
-
-    public func load<T>(type: String) throws -> [T] where T: Codable
-    {
-        let iterator: AmberIterator<T> = AmberIterator(type: type, universe: self)
-
-        var results: [T] = []
-        while true
-        {
-            guard let user = iterator.next() else
-            {
-                return results
-            }
-
-            results.append(user)
-        }
-
-        return results
+        try reference.delete()
     }
 
     public func load<T>(identifier: UInt64) throws -> Reference<T>
@@ -41,7 +24,28 @@ extension Universe
         return try Reference(universe: self, identifier: identifier)
     }
 
-    public func load<T>(identifier: UInt64) throws -> T
+    public func load<T>() throws -> IndexedCollection<T> where T: Codable
+    {
+        return try IndexedCollection(universe: self)
+    }
+
+    public func new<T>(object: T) throws -> Reference<T> where T: Codable
+    {
+        return try Reference(universe: self, object: object)
+    }
+
+    public func save<T>(reference: Reference<T>) throws
+    {
+        try reference.save()
+    }
+
+    // Codables
+    public func delete(identifier: UInt64) throws -> Bool
+    {
+        return try self.deleteData(identifier: identifier)
+    }
+
+    public func load<T>(identifier: UInt64) throws -> T where T: Codable
     {
         let data = try self.loadData(identifier: identifier)
         let types = Types.type(String(describing: T.self))
@@ -54,28 +58,11 @@ extension Universe
         return result
     }
 
-    public func save<T>(reference: Reference<T>) throws
-    {
-        try reference.save()
-    }
-
-    // FIXME - update index
-    public func save<T>(identifier: UInt64, object: T) throws
+    public func save<T>(identifier: UInt64, object: T) throws where T: Codable
     {
         let data = try Amber.save(object)
         let typeName = "\(type(of: T.self))"
         try self.saveData(identifier: identifier, type: typeName, data: data)
-    }
-
-    public func delete<T>(reference: Reference<T>) throws
-    {
-        try reference.delete()
-    }
-
-    // FIXME - update index
-    public func delete(identifier: UInt64) throws -> Bool
-    {
-        return try self.deleteData(identifier: identifier)
     }
 }
 

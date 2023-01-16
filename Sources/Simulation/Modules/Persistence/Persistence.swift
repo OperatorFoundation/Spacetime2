@@ -80,6 +80,11 @@ public class Persistence
         try self.index.append(type: type, identifier: identifier)
     }
 
+    public func delete(type: String, identifier: UInt64) throws
+    {
+        try self.index.delete(type: type, identifier: identifier)
+    }
+
     // Relationship
     public func query(subject: UInt64?, relation: Relation?, object: UInt64?) -> [Relationship]
     {

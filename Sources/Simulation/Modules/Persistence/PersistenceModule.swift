@@ -2,7 +2,7 @@
 //  PersistenceModule.swift
 //
 //
-//  Created by Clockwork on Jan 12, 2023.
+//  Created by Clockwork on Jan 13, 2023.
 //
 
 import Foundation
@@ -82,6 +82,11 @@ public class PersistenceModule: Module
                 case let request as PersistenceAppendRequest:
                     try self.handler.append(type: request.type, identifier: request.identifier)
                     let response = PersistenceAppendResponse(request.id)
+                    print(response.description)
+                    return response
+                case let request as PersistenceDeleteRequest:
+                    try self.handler.delete(type: request.type, identifier: request.identifier)
+                    let response = PersistenceDeleteResponse(request.id)
                     print(response.description)
                     return response
                 case let request as PersistenceQueryRequest:

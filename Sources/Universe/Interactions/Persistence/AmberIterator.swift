@@ -7,9 +7,9 @@
 
 import Foundation
 
-public class AmberIterator<T>: IteratorProtocol
+public class AmberIterator<R, T>: IteratorProtocol where R: Reference<T>, T: Codable
 {
-    public typealias Element = T
+    public typealias Element = Reference<T>
 
     let type: String
     let universe: Universe
@@ -33,7 +33,7 @@ public class AmberIterator<T>: IteratorProtocol
         do
         {
             let identifier = try self.universe.load(type: self.type, offset: self.index)
-            let result: T = try self.universe.load(identifier: identifier)
+            let result: Reference<T> = try self.universe.load(identifier: identifier)
             self.index = self.index + 1
             return result
         }

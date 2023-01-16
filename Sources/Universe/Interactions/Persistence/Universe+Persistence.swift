@@ -2,7 +2,7 @@
 //  Universe+Persistence.swift
 //
 //
-//  Created by Clockwork on Jan 12, 2023.
+//  Created by Clockwork on Jan 13, 2023.
 //
 
 import Foundation
@@ -124,6 +124,21 @@ extension Universe
         switch result
         {
             case is PersistenceAppendResponse:
+                return
+
+            default:
+                throw PersistenceError.failure
+        }
+    }
+
+    public func delete(type: String, identifier: UInt64) throws
+    {
+        let request = PersistenceDeleteRequest(type: type, identifier: identifier)
+        let result = self.processEffect(request)
+
+        switch result
+        {
+            case is PersistenceDeleteResponse:
                 return
 
             default:

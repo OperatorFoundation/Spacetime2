@@ -28,15 +28,15 @@ public struct IndexedCollection<T> where T: Codable
 extension IndexedCollection: Sequence
 {
     public typealias Element = Reference<T>
-    public typealias Iterator = AmberIterator<Element>
+    public typealias Iterator = AmberIterator<Reference<T>, T>
 
     public func makeIterator() -> Iterator
     {
-        return AmberIterator<Reference<T>>(type: self.name, universe: self.universe)
+        return AmberIterator<Reference<T>, T>(type: self.name, universe: self.universe)
     }
 }
 
-extension IndexedCollection: Collection, MutableCollection
+extension IndexedCollection: Collection
 {
     public subscript(position: Int) -> Reference<T>
     {
@@ -44,13 +44,6 @@ extension IndexedCollection: Collection, MutableCollection
         {
             let index = try! self.universe.load(type: self.name, offset: position)
             return try! Reference(universe: self.universe, identifier: index)
-        }
-
-        set(newValue)
-        {
-            let index = try! self.universe.load(type: self.name, offset: position)
-            let ref = Reference(universe: self.universe, identifier: index, object: newValue)
-            try! ref.save()
         }
     }
 
