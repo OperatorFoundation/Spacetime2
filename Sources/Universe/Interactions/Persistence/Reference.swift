@@ -7,7 +7,7 @@
 
 import Foundation
 
-public class Reference<T> where T: Codable
+public class Reference<T>: Codable where T: Codable
 {
     enum CodingKeys: String, CodingKey
     {

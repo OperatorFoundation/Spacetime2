@@ -19,7 +19,7 @@ extension Universe
         try reference.delete()
     }
 
-    public func load<T>(identifier: UInt64) throws -> Reference<T>
+    public func loadReference<T>(identifier: UInt64) throws -> Reference<T>
     {
         return try Reference(universe: self, identifier: identifier)
     }
