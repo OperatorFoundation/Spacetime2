@@ -103,6 +103,18 @@ public class Reference<T>: Codable where T: Codable, T: Equatable
 
         let _ = try universe.delete(identifier: self.identifier)
         try universe.delete(type: self.type, identifier: self.identifier)
+
+        let subjectRelationships = try universe.query(subject: self.identifier, relation: nil, object: nil)
+        for relationship in subjectRelationships
+        {
+            try universe.deleteRelationship(relationship: relationship)
+        }
+
+        let objectRelationships = try universe.query(subject: nil, relation: nil, object: self.identifier)
+        for relationship in objectRelationships
+        {
+            try universe.deleteRelationship(relationship: relationship)
+        }
     }
 
     public func exists() throws -> Bool
