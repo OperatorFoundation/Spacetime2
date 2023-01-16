@@ -79,6 +79,11 @@ public class Reference<T>: Codable where T: Codable, T: Equatable
     }
 
     // Public functions
+    public func connect(universe: Universe)
+    {
+        self.universe = universe
+    }
+
     public func copy() throws -> Reference<T>
     {
         guard let universe = self.universe else
