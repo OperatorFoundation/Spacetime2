@@ -11,7 +11,7 @@ import Amber
 
 public struct IndexedCollection<T> where T: Codable, T: Equatable
 {
-    public let name = "\(type(of: T.self))"
+    public let name = String("\(type(of: T.self))".split(separator: ".")[0])
     public let universe: Universe
 
     public var startIndex: Int
