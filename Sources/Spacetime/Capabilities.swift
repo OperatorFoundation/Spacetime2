@@ -15,7 +15,7 @@ public struct Capabilities
     {
         for capability in capabilityList
         {
-            self.capabilities.insert(capability)
+            self.capabilities.insert(capability.lowercased())
         }
     }
 
@@ -23,18 +23,18 @@ public struct Capabilities
     {
         for capability in capabilityList
         {
-            self.capabilities.insert(capability)
+            self.capabilities.insert(capability.lowercased())
         }
     }
 
     public init(_ names: BuiltinModuleNames...)
     {
-        let list = names.map {$0.rawValue}
+        let list = names.map {$0.rawValue.lowercased()}
         self.init(list)
     }
 
     public func hasCapability(_ name: String) -> Bool
     {
-        return self.capabilities.contains(name)
+        return self.capabilities.contains(name.lowercased())
     }
 }
