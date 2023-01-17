@@ -81,7 +81,7 @@ public class Simulation
 
             for (name, module) in BuiltinModules.modules
             {
-                if effect.module == name && self.capabilities.hasCapability(effect.module)
+                if effect.module.lowercased() == name.lowercased() && self.capabilities.hasCapability(effect.module.lowercased())
                 {
                     handled = true
 
