@@ -56,7 +56,7 @@ public class Reference<T>: Codable where T: Codable, T: Equatable
         self.universe = universe
         self.identifier = identifier
         self.object = object
-        self.type = "\(Swift.type(of: object))"
+        self.type = String("\(Swift.type(of: object))".split(separator: ".")[0])
     }
 
     // Codable implementation
