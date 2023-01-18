@@ -40,7 +40,7 @@ public class IndexDatabase
         let url = self.path.appendingPathComponent(type)
         if File.exists(url.path)
         {
-            return try UInt64(File.size(url))
+            return try UInt64(File.size(url)) / 8
         }
         else
         {
