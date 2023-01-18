@@ -61,7 +61,7 @@ extension Universe
     public func save<T>(identifier: UInt64, object: T) throws where T: Codable
     {
         let data = try Amber.save(object)
-        let typeName = "\(type(of: T.self))"
+        let typeName = String("\(type(of: T.self))".split(separator: " ")[0])
         try self.saveData(identifier: identifier, type: typeName, data: data)
     }
 }
