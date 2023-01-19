@@ -87,6 +87,7 @@ public class DataDatabase
     func save(data: Data, filename: String) throws
     {
         let url = URL(fileURLWithPath: "\(self.path)/\(filename)")
+        print(url.absoluteString)
         try data.write(to: url)
     }
 
@@ -140,9 +141,11 @@ public class DataDatabase
     {
         let filename = identifier.string
         let typeFilename = "\(self.path)/\(identifier).type"
+        let url = URL(fileURLWithPath: typeFilename)
+        print(url.absoluteString)
 
         let typeData = type.data
-        try typeData.write(to: URL(fileURLWithPath: typeFilename))
+        try typeData.write(to: url)
         
         try save(data: data, filename: filename)
     }
