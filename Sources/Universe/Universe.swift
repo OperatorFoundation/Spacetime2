@@ -24,7 +24,7 @@ open class Universe
     let events: BlockingQueue<Event>
     let lock: DispatchSemaphore = DispatchSemaphore(value: 1)
 
-    var channels: [UUID: BlockingQueue<Event>] = [:]
+    var channels = ThreadSafeDictionary<UUID, BlockingQueue<Event>>()
 
     public init(effects: BlockingQueue<Effect>, events: BlockingQueue<Event>, logger: Logger?)
     {
