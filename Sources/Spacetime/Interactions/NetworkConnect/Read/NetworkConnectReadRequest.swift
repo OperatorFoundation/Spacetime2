@@ -48,6 +48,7 @@ public class NetworkConnectReadRequest: Effect
 public enum NetworkConnectReadStyle: Codable
 {
     case exactSize(Int)
+    case unsafeExactSize(Int)
     case maxSize(Int)
     case lengthPrefixSizeInBits(Int)
 }
@@ -64,6 +65,8 @@ extension NetworkConnectReadStyle: CustomStringConvertible
                 return ".maxSize(\(size))"
             case .lengthPrefixSizeInBits(let bits):
                 return ".lengthPrefixSizeInBits(\(bits))"
+            case .unsafeExactSize(let size):
+                return ".unsafeExactSize(\(size))"
         }
     }
 }

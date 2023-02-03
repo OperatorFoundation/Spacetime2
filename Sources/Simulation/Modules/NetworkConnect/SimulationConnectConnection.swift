@@ -89,6 +89,20 @@ fileprivate struct Read
                     logAThing(logger: logger, logMessage: "SimulationConnectConnection: \(response.description)")
                     events.enqueue(element: response)
                     
+                case .unsafeExactSize(let size):
+                    logAThing(logger: logger, logMessage: "📖 SimulationConnectConnection.Read: case .unsafeExactSize(\(size)")
+                    guard let result = networkConnection.unsafeRead(size: size) else
+                    {
+                        let failure = Failure(request.id)
+                        print(failure.description)
+                        events.enqueue(element: failure)
+                        return
+                    }
+
+                    let response = NetworkConnectReadResponse(request.id, request.socketId, result)
+                    logAThing(logger: logger!, logMessage: "SimulationConnectConnection: \(response.description)")
+                    events.enqueue(element: response)
+                    
                 case .maxSize(let size):
                     logAThing(logger: logger, logMessage: "📖 SimulationConnectConnection.Read: case .maxSize(\(size))")
                     guard let result = networkConnection.read(maxSize: size) else
