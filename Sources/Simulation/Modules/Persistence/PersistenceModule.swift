@@ -13,6 +13,7 @@ import Logging
 #endif
 
 import Chord
+import Gardener
 import Spacetime
 
 public class PersistenceModule: Module
@@ -25,7 +26,8 @@ public class PersistenceModule: Module
 
     public init()
     {
-        self.handler = try! Persistence(root: "spacetime")
+        let rootDirectory = File.homeDirectory().appendingPathComponent("spacetime")
+        self.handler = try! Persistence(root: rootDirectory.path)
     }
 
     public func name() -> String
