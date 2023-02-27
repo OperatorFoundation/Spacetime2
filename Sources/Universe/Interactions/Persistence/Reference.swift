@@ -7,7 +7,7 @@
 
 import Foundation
 
-public class Reference<T>: Codable where T: Codable, T: Equatable
+public class Reference<T>: Codable where T: Codable
 {
     // Private data structures
     enum CodingKeys: String, CodingKey
@@ -117,15 +117,22 @@ public class Reference<T>: Codable where T: Codable, T: Equatable
         }
     }
 
-    public func exists() throws -> Bool
+    public func exists() -> Bool
     {
         guard let universe = self.universe else
         {
-            throw ReferenceError.noUniverse
+            return false
         }
 
-        let other: T = try universe.load(identifier: self.identifier)
-        return other == self.object
+        do
+        {
+            let _: T = try universe.load(identifier: self.identifier)
+            return true
+        }
+        catch
+        {
+            return false
+        }
     }
 
     public func save() throws
