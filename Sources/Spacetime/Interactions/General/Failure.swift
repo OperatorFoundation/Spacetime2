@@ -11,7 +11,7 @@ public class Failure: Event
 {
     public override var description: String
     {
-        return "\(self.module).Affected[effectID: \(String(describing: self.effectId))]"
+        return "\(self.module).Failure[effectID: \(String(describing: self.effectId))]"
     }
 
     public init(_ effectId: UUID)
