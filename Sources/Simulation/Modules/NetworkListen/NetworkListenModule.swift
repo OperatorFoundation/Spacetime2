@@ -66,33 +66,46 @@ public class NetworkListenModule: Module
 
             case let request as NetworkListenReadRequest:
                 let uuid = request.socketId
+
+                self.lock.wait()
                 guard let connection = self.connections[uuid] else
                 {
+                    self.lock.signal()
                     return Failure(request.id)
                 }
+                self.lock.signal()
 
                 connection.read(request: request, channel: channel)
                 return nil
 
             case let request as NetworkListenWriteRequest:
                 let uuid = request.socketId
+
+                self.lock.wait()
                 guard let connection = self.connections[uuid] else
                 {
+                    self.lock.signal()
                     return Failure(request.id)
                 }
+                self.lock.signal()
 
                 connection.write(request: request, channel: channel)
                 return nil
 
             case let request as NetworkListenCloseRequest:
                 let uuid = request.socketId
+
+                self.lock.wait()
                 if let connection = self.connections[uuid]
                 {
+                    self.lock.signal()
                     connection.close(request: request, state: self, channel: channel)
                     return nil
                 }
                 else
                 {
+                    self.lock.signal()
+
                     self.lock.wait()
                     if let listener = self.listeners[uuid]
                     {
