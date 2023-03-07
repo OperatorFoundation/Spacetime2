@@ -22,8 +22,11 @@ public class NetworkListenModule: Module
     static public let name = "networkListen"
 
     public var logger: Logger?
-    public var listeners: [UUID: SimulationListener] = [:]
     public var connections: [UUID: SimulationListenConnection] = [:]
+
+    let lock = DispatchSemaphore(value: 0)
+
+    var listeners: [UUID: SimulationListener] = [:]
 
     public func name() -> String
     {
@@ -41,10 +44,14 @@ public class NetworkListenModule: Module
         {
             case let request as AcceptRequest:
                 let listenUuid = request.socketId
+
+                self.lock.wait()
                 guard let listener = self.listeners[listenUuid] else
                 {
+                    self.lock.signal()
                     return Failure(request.id)
                 }
+                self.lock.signal()
 
                 listener.accept(request: request, state: self, channel: channel)
                 return nil
@@ -84,14 +91,20 @@ public class NetworkListenModule: Module
                     connection.close(request: request, state: self, channel: channel)
                     return nil
                 }
-                else if let listener = self.listeners[uuid]
-                {
-                    listener.close(request: request, state: self, channel: channel)
-                    return nil
-                }
                 else
                 {
-                    return Failure(request.id)
+                    self.lock.wait()
+                    if let listener = self.listeners[uuid]
+                    {
+                        self.lock.signal()
+                        listener.close(request: request, state: self, channel: channel)
+                        return nil
+                    }
+                    else
+                    {
+                        self.lock.signal()
+                        return Failure(request.id)
+                    }
                 }
 
             default:
@@ -113,6 +126,13 @@ public class NetworkListenModule: Module
         }
 
         let listener = SimulationListener(networkListener)
+
+        defer
+        {
+            self.lock.signal()
+        }
+        self.lock.wait()
+
         self.listeners[uuid] = listener
 
         return uuid
