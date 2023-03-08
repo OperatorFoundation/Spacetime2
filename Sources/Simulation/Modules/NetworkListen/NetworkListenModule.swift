@@ -24,7 +24,7 @@ public class NetworkListenModule: Module
     public var logger: Logger?
     public var connections: [UUID: SimulationListenConnection] = [:]
 
-    let lock = DispatchSemaphore(value: 0)
+    let lock = DispatchSemaphore(value: 1)
 
     var listeners: [UUID: SimulationListener] = [:]
 
