@@ -67,7 +67,7 @@ public class Simulation
         while true
         {
             let effect = self.effects.dequeue()
-
+            logAThing(logger: logger, logMessage: "Simulation.handleEffects() effect: \(effect)")
             switch effect
             {
                 case is Display:
@@ -130,7 +130,7 @@ public class Simulation
             }
 
             let response = Failure(effect.id)
-            print(response.description)
+            logAThing(logger: logger, logMessage: response.description)
             events.enqueue(element: response)
             continue
         }
