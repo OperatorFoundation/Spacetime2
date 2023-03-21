@@ -108,14 +108,26 @@ public class NetworkConnectModule: Module
     func connect(host: String, port: Int, type: ConnectionType) -> UUID?
     {
         let uuid = UUID()
-        guard let networkConnection = TransmissionConnection(host: host, port: port, type: type, logger: nil) else
-        {
-            return nil
+        if type == .tcp {
+            guard let networkConnection = TCPConnection(host: host, port: port, logger: nil) else
+            {
+                return nil
+            }
+
+            let connection = SimulationConnectConnection(networkConnection, logger: logger)
+            self.connections[uuid] = connection
+
+            return uuid
+        } else {
+            guard let networkConnection = UDPConnection(host: host, port: port, logger: nil) else
+            {
+                return nil
+            }
+
+            let connection = SimulationConnectConnection(networkConnection, logger: logger)
+            self.connections[uuid] = connection
+
+            return uuid
         }
-
-        let connection = SimulationConnectConnection(networkConnection, logger: logger)
-        self.connections[uuid] = connection
-
-        return uuid
     }
 }
