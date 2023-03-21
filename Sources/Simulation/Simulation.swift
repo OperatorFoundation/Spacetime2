@@ -129,7 +129,7 @@ public class Simulation
                 continue
             }
 
-            let response = Failure(effect.id)
+            let response = Failure(effect.id, file: #file, fileID: #fileID, filePath: #filePath, line: #line, column: #column, function: #function)
             print(response.description)
             events.enqueue(element: response)
             continue
