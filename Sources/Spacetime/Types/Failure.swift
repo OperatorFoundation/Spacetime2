@@ -1,5 +1,5 @@
 //
-//  Failure.swift
+//  GenericFailureResultBase.swift
 //  
 //
 //  Created by Dr. Brandon Wiley on 2/3/22.
@@ -7,8 +7,9 @@
 
 import Foundation
 
-public class Failure: Event
+public class GenericFailure: Error, CustomStringConvertible, Codable
 {
+    public let effectID: UInt64
     public let file: String?
     public let fileID: String?
     public let filePath: String?
@@ -16,9 +17,9 @@ public class Failure: Event
     public let column: Int?
     public let function: String?
 
-    public override var description: String
+    public var description: String
     {
-        var result = "\(self.module).Failure[effectID: \(String(describing: self.effectId))"
+        var result = "Failure[effectID: \(String(describing: self.effectID))"
 
         if let file = self.file
         {
@@ -45,21 +46,20 @@ public class Failure: Event
         return result
     }
 
-    public init(_ effectId: UUID, file: String? = nil, fileID: String? = nil, filePath: String? = nil, line: Int? = nil, column: Int? = nil, function: String? = nil)
+    public init(_ effectID: UInt64, file: String? = nil, fileID: String? = nil, filePath: String? = nil, line: Int? = nil, column: Int? = nil, function: String? = nil)
     {
+        self.effectID = effectID
         self.file = file
         self.fileID = fileID
         self.filePath = filePath
         self.line = line
         self.column = column
         self.function = function
-
-        super.init(effectId, module: BuiltinModuleNames.general.rawValue)
     }
 
     enum CodingKeys: String, CodingKey
     {
-        case effectId
+        case effectID
         case file
         case fileID
         case filePath
@@ -68,10 +68,10 @@ public class Failure: Event
         case function
     }
 
-    required init(from decoder: Decoder) throws
+    public required init(from decoder: Decoder) throws
     {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        let effectId = try container.decode(UUID.self, forKey: .effectId)
+        let effectID = try container.decode(UInt64.self, forKey: .effectID)
         let file = try container.decode(String?.self, forKey: .file)
         let fileID = try container.decode(String?.self, forKey: .fileID)
         let filePath = try container.decode(String?.self, forKey: .filePath)
@@ -79,13 +79,12 @@ public class Failure: Event
         let column = try container.decode(Int?.self, forKey: .column)
         let function = try container.decode(String?.self, forKey: .function)
 
+        self.effectID = effectID
         self.file = file
         self.fileID = fileID
         self.filePath = filePath
         self.line = line
         self.column = column
         self.function = function
-
-        super.init(effectId, module: BuiltinModuleNames.general.rawValue)
     }
 }

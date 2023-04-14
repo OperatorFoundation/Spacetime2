@@ -5,7 +5,7 @@ import PackageDescription
 
 let package = Package(
     name: "Spacetime",
-    platforms: [.macOS(.v12),
+    platforms: [.macOS(.v13),
                 .iOS(.v15)],
     products: [
         // Products define the executables and libraries a package produces, and make them visible to other packages.
@@ -30,6 +30,7 @@ let package = Package(
         .package(url: "https://github.com/OperatorFoundation/Parchment", branch: "main"),
         .package(url: "https://github.com/OperatorFoundation/SwiftHexTools", branch: "main"),
         .package(url: "https://github.com/OperatorFoundation/SwiftQueue", branch: "main"),
+        .package(url: "https://github.com/OperatorFoundation/Text", branch: "main"),
         .package(url: "https://github.com/OperatorFoundation/Transmission", branch: "main"),
         .package(url: "https://github.com/OperatorFoundation/TransmissionTypes", branch: "main"),
     ],
@@ -40,6 +41,7 @@ let package = Package(
             name: "Spacetime",
             dependencies: [
                 "Datable",
+                "Text",
 
                 .product(name: "ParchmentFile", package: "Parchment"),
             ]),
@@ -55,6 +57,7 @@ let package = Package(
                 "SwiftHexTools",
                 "SwiftQueue",
                 "Spacetime",
+                "Text",
                 "TransmissionTypes",
             ]),
         .target(
@@ -67,6 +70,7 @@ let package = Package(
                 "Chord",
                 "Spacetime",
                 "SwiftQueue",
+                "Text",
                 "Transmission",
             ]),
         .testTarget(

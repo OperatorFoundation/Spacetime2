@@ -7,9 +7,16 @@
 
 import Foundation
 
-open class Effect: CustomStringConvertible, Codable
+public protocol Effect
 {
-    public let id: UUID
+    associatedtype ResponseType where ResponseType: Response
+
+    var id: UInt64 { get }
+}
+
+open class EffectBase: CustomStringConvertible, Codable
+{
+    public let id: UInt64
     public let module: String
 
     open var description: String
@@ -17,7 +24,7 @@ open class Effect: CustomStringConvertible, Codable
         return "Effect(\(type(of: self)))[id: \(self.id)]"
     }
 
-    public init(id: UUID = UUID(), module: String)
+    public init(id: UInt64 = UInt64.random(in: 0..<UInt64.max), module: String)
     {
         self.id = id
         self.module = module
